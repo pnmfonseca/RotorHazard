@@ -2174,6 +2174,13 @@ def on_LED_RBCYCLE():
 def on_LED_RBCHASE():
     theaterChaseRainbow(strip) #Rainbow Chase
 
+@SOCKET_IO.on('LED_brightness')
+def on_LED_brightness(data):
+    '''Change LED Brightness'''
+    brightness = data['brightness']
+    strip.setBrightness(brightness)
+    strip.show()
+
 @SOCKET_IO.on('set_option')
 def on_set_option(data):
     setOption(data['option'], data['value'])
