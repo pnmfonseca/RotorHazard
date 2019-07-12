@@ -264,10 +264,11 @@ class Cluster:
 
     def emitStatus(self):
         now = monotonic()
-        SOCKET_IO.emit('cluster_status', {'slaves': [ \
-            {'address': slave.address, \
-            'last_contact': int(now-slave.lastContact) if slave.lastContact >= 0 else 'connection lost' \
-            }] for slave in self.slaves})
+        if len(self.slaves):
+            SOCKET_IO.emit('cluster_status', {'slaves': [ \
+                {'address': slave.address, \
+                'last_contact': int(now-slave.lastContact) if slave.lastContact >= 0 else 'connection lost' \
+                }] for slave in self.slaves})
 
 CLUSTER = Cluster()
 hasMirrors = False
