@@ -80,7 +80,6 @@ Config['LED']['LED_COUNT']      = 150      # Number of LED pixels.
 Config['LED']['LED_PIN']        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 Config['LED']['LED_FREQ_HZ']    = 800000  # LED signal frequency in hertz (usually 800khz)
 Config['LED']['LED_DMA']        = 10      # DMA channel to use for generating signal (try 10)
-Config['LED']['LED_BRIGHTNESS'] = 255     # Set to 0 for darkest and 255 for brightest
 Config['LED']['LED_INVERT']     = False   # True to invert the signal (when using NPN transistor level shift)
 Config['LED']['LED_CHANNEL']    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 Config['LED']['LED_STRIP']      = 'GRB'   # Strip type and colour ordering
@@ -479,7 +478,7 @@ except ImportError:
     Pixel = getattr(pixelModule, 'ANSIPixel')
     Color = getattr(pixelModule, 'Color')
     led_strip = None
-strip = Pixel(Config['LED']['LED_COUNT'], Config['LED']['LED_PIN'], Config['LED']['LED_FREQ_HZ'], Config['LED']['LED_DMA'], Config['LED']['LED_INVERT'], Config['LED']['LED_BRIGHTNESS'], Config['LED']['LED_CHANNEL'], led_strip)
+strip = Pixel(Config['LED']['LED_COUNT'], Config['LED']['LED_PIN'], Config['LED']['LED_FREQ_HZ'], Config['LED']['LED_DMA'], Config['LED']['LED_INVERT'], int(getOption("ledBrightness")), Config['LED']['LED_CHANNEL'], led_strip)
 # Intialize the library (must be called once before other functions).
 strip.begin()
 
@@ -2180,6 +2179,7 @@ def on_LED_brightness(data):
     brightness = data['brightness']
     strip.setBrightness(brightness)
     strip.show()
+    setOption("ledBrightness", brightness)
 
 @SOCKET_IO.on('set_option')
 def on_set_option(data):
@@ -2947,7 +2947,7 @@ def emit_class_data(**params):
         current_class['description'] = race_class.description
         current_class['format'] = race_class.format_id
 
-        has_race = SavedRaceMeta.query.filter_by(class_id=race_class.id).one_or_none()
+        has_race = SavedRaceMeta.query.filter_by(class_id=race_class.id).first()
         if has_race:
             current_class['locked'] = True
         else:
@@ -4013,6 +4013,8 @@ def db_reset_options_defaults():
     # event information
     setOption("eventName", __("FPV Race"))
     setOption("eventDescription", "")
+    # LED settings
+    setOption("ledBrightness", "32")
 
     server_log("Reset global settings")
 

@@ -86,8 +86,10 @@
 		$('#set_indicator_volume').val(volume_logsl.position(rotorhazard.indicator_beep_volume));
 		$('#indicator_volume_value').html($('#set_indicator_volume').val());
 
-		$('#set_led_brightness').val(brightness_logsl.position(rotorhazard.led_brightness));
-		$('#led_brightness_value').html($('#set_led_brightness').val());
+		if ('{{ getOption('ledBrightness') }}' != 'False') {
+			$('#set_led_brightness').val(brightness_logsl.position( {{ getOption('ledBrightness') }} ));
+			$('#led_brightness_value').html($('#set_led_brightness').val());
+		}
 
 		// populate frequency selects
 		$('.frequency_table').each(function(){
