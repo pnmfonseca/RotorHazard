@@ -3,6 +3,11 @@
 <script type="text/javascript" src="./static/FileSaver.min.js"></script>
 
 <script type="text/javascript" charset="utf-8">
+	// set admin flag
+	rotorhazard.admin = true;
+	rotorhazard.saveData();
+	$('*').removeClass('admin-hide');
+
 	var logsl = new LogSlider({maxpos: 12, minval: 0.0001, maxval: 1});
 	var volume_logsl = new LogSlider({maxpos: 100, minval: 0.01, maxval: 1});
 	var brightness_logsl = new LogSlider({maxpos: 25, minval: 5, maxval: 255});
@@ -54,11 +59,6 @@
 		});
 
 		var heartbeatCounter = 0;
-
-		// set admin flag
-		rotorhazard.admin = true;
-		rotorhazard.saveData();
-		$('nav li').removeClass('admin-hide');
 
 		// populate voice controls
 		$('#voice_callsign').prop( "checked", rotorhazard.voice_callsign);
