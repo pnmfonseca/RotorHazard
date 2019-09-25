@@ -3752,23 +3752,6 @@ def pass_record_callback(node, lap_timestamp_absolute, source):
                                             emit_phonetic_data(pilot_id, lap_id, lap_time, None, None)
                             elif lap_id == 0:
                                 emit_first_pass_registered(node.index) # play first-pass sound
-
-                        if node.index==0:
-                            onoff(strip, Color(0,0,255))  #BLUE
-                        elif node.index==1:
-                            onoff(strip, Color(255,50,0)) #ORANGE
-                        elif node.index==2:
-                            onoff(strip, Color(255,0,60)) #PINK
-                        elif node.index==3:
-                            onoff(strip, Color(150,0,255)) #PURPLE
-                        elif node.index==4:
-                            onoff(strip, Color(250,210,0)) #YELLOW
-                        elif node.index==5:
-                            onoff(strip, Color(0,255,255)) #CYAN
-                        elif node.index==6:
-                            onoff(strip, Color(0,255,0)) #GREEN
-                        elif node.index==7:
-                            onoff(strip, Color(255,0,0)) #RED
                 else:
                     server_log('Pass record dismissed: Node: {0}, Race not started' \
                         .format(node.index+1))
@@ -3796,6 +3779,23 @@ def new_enter_or_exit_at_callback(node, is_enter_at_flag):
         emit_exit_at_level(node)
 
 def node_crossing_callback(node):
+    if node.crossing_flag:
+        if node.index==0:
+            onoff(strip, Color(0,31,255)) # Blue
+        elif node.index==1:
+            onoff(strip, Color(255,63,0)) # Orange
+        elif node.index==2:
+            onoff(strip, Color(127,255,0)) # Light Green
+        elif node.index==3:
+            onoff(strip, Color(255,255,0)) # Yellow
+        elif node.index==4:
+            onoff(strip, Color(127,0,255)) # Purple
+        elif node.index==5:
+            onoff(strip, Color(255,0,127)) # Pink
+        elif node.index==6:
+            onoff(strip, Color(63,255,63)) # Mint
+        elif node.index==7:
+            onoff(strip, Color(0,191,255)) # Sky
     emit_node_crossing_change(node)
 
 # set callback functions invoked by interface module
