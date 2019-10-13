@@ -641,6 +641,12 @@ def imdtabler():
 
     return render_template('imdtabler.html', serverInfo=serverInfo, getOption=getOption, __=__)
 
+# CAAR routes
+@APP.route('/leaderboard')
+def leaderboard():
+    '''Route to the leaderboard page.'''
+    return render_template('leaderboard.html', serverInfo=serverInfo, getOption=getOption, __=__,num_nodes=RACE.num_nodes)
+
 # Debug Routes
 
 @APP.route('/hardwarelog')
