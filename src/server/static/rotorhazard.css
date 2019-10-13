@@ -1,5 +1,5 @@
 html {
-	background: #fff;
+	background: blueviolet;
 	color: #000;
 	margin: 0;
 	padding: 0;
@@ -7,7 +7,7 @@ html {
 }
 
 body {
-	font-size: 1.2em;
+	font-size: 1em;
 	font-family: sans-serif;
 	margin: 0;
 	padding: 0;
