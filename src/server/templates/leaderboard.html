@@ -1,4 +1,4 @@
-{% extends "layout.html" %} {% block title %}Race{% endblock %}{% block head %}
+{% extends "layout.html" %} {% block title %}Leaderboard{% endblock %}{% block head %}
 <script type="text/javascript" charset="utf-8">
 	
 
@@ -8,10 +8,18 @@
 	});
 
 </script>
-{% endblock %} {% block content %}
-<main class="page-racepublic">
+{% endblock %}
 
-OK
+{% block content %}
+
+<main class="page-leaderboards">
+
+	<ul>
+		{% for k in data %}
+			<li> {{ k.count }} - {{ k.name }} </li>
+			{% endfor %}
+	</ul>
+
 
 
 </main>
