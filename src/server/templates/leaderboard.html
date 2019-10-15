@@ -14,12 +14,44 @@
 
 <main class="page-leaderboards">
 
-	<ul>
-		{% for k in data %}
-			<li> {{ k.count }} - {{ k.name }} </li>
-			{% endfor %}
-	</ul>
 
+	
+	<h2>5-to-8</h2>
+	<table>
+		<thead>
+			<th>Rank</th>
+			<th>Callsign</th>
+			<th>Name</th>
+			<th>Team</th>
+		</thead>
+		<tbody>
+
+			{% for pilot in top5_8_data %}
+			<tr>
+				<td>{{ pilot.rank }}</td><td>{{ pilot.callsign }}</td><td>{{ pilot.name }}</td><td>{{ pilot.team }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<br>
+
+	<h2>Top8</h2>
+	<table>
+		<thead>
+			<th>Rank</th>
+			<th>Pilot</th>
+			<th>Points</th>
+		</thead>
+		<tbody>
+
+			{% for pilot in top8_data %}
+			<tr>
+				<td>{{ pilot.rank }}</td><td>{{ pilot.name }}</td><td>{{ pilot.points }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 
 
 </main>
