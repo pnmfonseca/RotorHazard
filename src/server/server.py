@@ -648,6 +648,8 @@ def leaderboard():
     
     top8_data = {}
     top5_8_data = {}
+    top1_4_data = {}
+    leaderboard_data = {}
     
     try:
 
@@ -655,8 +657,9 @@ def leaderboard():
             request_data = request.get_json()
                 
             _section = request.args.get('section')
+            
             if _section:
-                server_log("Receiving data for section {}".format(_section))
+                server_log(">> Receiving data for section {}".format(_section))
                 with open("{}.json".format(_section), 'w') as outfile:
                     json.dump(request_data, outfile)
         else:
@@ -672,12 +675,29 @@ def leaderboard():
                     top5_8_data = json.load(json_file)
             except:
                 pass
+
+            try:
+                with open('top1_4.json') as json_file:
+                    top1_4_data = json.load(json_file)
+            except:
+                pass
+            
+            try:
+                with open('leaderboard.json') as json_file:
+                    leaderboard_data = json.load(json_file)
+            except:
+                pass
                 
             
     except Exception as ex:
         server_log(str(ex))
     finally:
-        return render_template('leaderboard.html', serverInfo=serverInfo, getOption=getOption, __=__,num_nodes=RACE.num_nodes, top8_data = top8_data, top5_8_data = top5_8_data)
+        return render_template('leaderboard.html', serverInfo=serverInfo, getOption=getOption, __=__,num_nodes=RACE.num_nodes
+        , top8_data = top8_data
+        , top5_8_data = top5_8_data
+        , top1_4_data = top1_4_data
+        , leaderboard_data = leaderboard_data
+        )
 
 
 

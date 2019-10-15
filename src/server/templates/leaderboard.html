@@ -16,6 +16,45 @@
 
 
 	
+	<h2>LeaderBoard</h2>
+	<table>
+		<thead>
+			<th>Rank</th>
+			<th>Callsign</th>
+			<th>Name</th>
+			<th>Team</th>
+		</thead>
+		<tbody>
+
+			{% for pilot in leaderboard_data %}
+			<tr>
+				<td>{{ pilot.rank }}</td><td>{{ pilot.callsign }}</td><td>{{ pilot.name }}</td><td>{{ pilot.team }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<br>
+
+	<h2>1-to-4</h2>
+	<table>
+		<thead>
+			<th>Rank</th>
+			<th>Callsign</th>
+			<th>Name</th>
+			<th>Team</th>
+		</thead>
+		<tbody>
+
+			{% for pilot in top1_4_data %}
+			<tr>
+				<td>{{ pilot.rank }}</td><td>{{ pilot.callsign }}</td><td>{{ pilot.name }}</td><td>{{ pilot.team }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<br>
 	<h2>5-to-8</h2>
 	<table>
 		<thead>
