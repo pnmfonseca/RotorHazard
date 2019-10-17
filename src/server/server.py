@@ -711,6 +711,9 @@ def populate_pilots():
         # DB.session.refresh(new_pilot)
         DB.session.commit()
         server_log('Created new pilot id {0}'.format(new_pilot.id))
+    
+    return Response(response='OK\n', status=200)
+
 @APP.route('/leaderboard', methods=[ 'POST'])
 @requires_auth
 def leaderboardPOST():
@@ -733,9 +736,7 @@ def leaderboardPOST():
     except Exception as ex:
         server_log(str(ex))
     finally:
-        return {"status":"ok"}
-
-    return Response(response='OK\n', status=200)
+        return Response(response='OK\n', status=200)
 
 # Debug Routes
 
