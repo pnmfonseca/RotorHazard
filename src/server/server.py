@@ -700,10 +700,11 @@ def leaderboard():
         )
 
 @APP.route('/populate_pilots', methods=['POST'])
+@requires_auth
 def populate_pilots():
     '''Route to populate pilot data in DB.'''
 
-    # curl -d '[{"callsign": "War", "name": "Paulo Serrao"}, {"callsign": "Pacheco", "name": "Pedro"}, {"callsign": "Ranger", "name": "Paulo Jesus"}]' -H "Content-Type: application/json" -X POST http://localhost:5000/populate_pilots
+    # curl -u admin:rotorhazard -d '[{"callsign": "War", "name": "Paulo Serrao"}, {"callsign": "Pacheco", "name": "Pedro"}, {"callsign": "Ranger", "name": "Paulo Jesus"}]' -H "Content-Type: application/json" -X POST http://localhost:5000/populate_pilots
 
     if request.method == "POST":
         request_data = request.get_json()
