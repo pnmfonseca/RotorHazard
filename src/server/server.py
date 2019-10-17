@@ -709,7 +709,6 @@ def leaderboardPOST():
     except Exception as ex:
         server_log(str(ex))
     finally:
-
         return {"status":"ok"}
 
 
