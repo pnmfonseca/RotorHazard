@@ -642,52 +642,40 @@ def imdtabler():
     return render_template('imdtabler.html', serverInfo=serverInfo, getOption=getOption, __=__)
 
 # CAAR routes
-@APP.route('/leaderboard', methods=['GET', 'POST'])
-def leaderboard():
-    '''Route to the leaderboard page.'''
-    
+@APP.route('/leaderboard', methods=[ 'GET'])
+def leaderboardGET():
+
     top8_data = {}
     top5_8_data = {}
     top1_4_data = {}
     leaderboard_data = {}
-    
+    prefix = "caar-"
+
     try:
 
-        if request.method == "POST":
-            request_data = request.get_json()
-                
-            _section = request.args.get('section')
-            
-            if _section:
-                server_log(">> Receiving data for section {}".format(_section))
-                with open("{}.json".format(_section), 'w') as outfile:
-                    json.dump(request_data, outfile)
-        else:
+        try:
+            with open('{}top8.json'.format(prefix)) as json_file:
+                top8_data = json.load(json_file)
+        except Exception as ex:
+            server_log("{}".format(str(ex)))
 
-            try:
-                with open('top8.json') as json_file:
-                    top8_data = json.load(json_file)
-            except:
-                pass
+        try:
+            with open('{}top5_8.json'.format(prefix)) as json_file:
+                top5_8_data = json.load(json_file)
+        except Exception as ex:
+            server_log("{}".format(str(ex)))
 
-            try:
-                with open('top5_8.json') as json_file:
-                    top5_8_data = json.load(json_file)
-            except:
-                pass
-
-            try:
-                with open('top1_4.json') as json_file:
-                    top1_4_data = json.load(json_file)
-            except:
-                pass
-            
-            try:
-                with open('leaderboard.json') as json_file:
-                    leaderboard_data = json.load(json_file)
-            except:
-                pass
-                
+        try:
+            with open('{}top1_4.json'.format(prefix)) as json_file:
+                top1_4_data = json.load(json_file)
+        except Exception as ex:
+            server_log("{}".format(str(ex)))
+        
+        try:
+            with open('{}leaderboard.json'.format(prefix)) as json_file:
+                leaderboard_data = json.load(json_file)
+        except Exception as ex:
+            server_log("{}".format(str(ex)))
             
     except Exception as ex:
         server_log(str(ex))
@@ -699,6 +687,30 @@ def leaderboard():
         , leaderboard_data = leaderboard_data
         )
 
+@APP.route('/leaderboard', methods=[ 'POST'])
+@requires_auth
+def leaderboardPOST():
+    '''Route to the leaderboard page.'''
+
+    try:
+
+        prefix = "caar-"
+
+        request_data = request.get_json()
+            
+        _section = request.args.get('section')
+
+        if _section:
+            server_log(">> Receiving data for section {}".format(_section))
+            with open("{}{}.json".format(prefix, _section), 'w') as outfile:
+                json.dump(request_data, outfile)
+                
+            
+    except Exception as ex:
+        server_log(str(ex))
+    finally:
+
+        return {"status":"ok"}
 
 
 
