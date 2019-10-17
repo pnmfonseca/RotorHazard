@@ -1,97 +1,145 @@
 {% extends "layout.html" %} {% block title %}Leaderboard{% endblock %}{% block head %}
 <script type="text/javascript" charset="utf-8">
-	
+
 
 	$(document).ready(function () {
-		
+		var VERDE=100;
 
-	});
+
+		$('td').click(function () {
+
+			pinta ($(this).text());
+			
+			return false;
+		});
+
+		function pinta(pTexto) {
+			var cor="rgb(121," + VERDE +",121)";
+			$('td').filter(function(){
+	  			return $(this).text() === pTexto;
+			}).each(function(){
+				$(this).parent().css({"background":cor});
+				VERDE=VERDE+30;
+			});
+	}
+});
 
 </script>
 {% endblock %}
 
 {% block content %}
 
+<br>
+
 <main class="page-leaderboards">
+	<div class="panel collapsing">
+		<div class="panel-header">
+			<h2>LeaderBoard</h2>
+		</div>
+		<div class="panel-content">
+			<table>
+				<thead>
+					<th>Rank</th>
+					<th>Callsign</th>
+					<th>Name</th>
+					<th>Team</th>
+				</thead>
+				<tbody>
 
-
-	
-	<h2>LeaderBoard</h2>
-	<table>
-		<thead>
-			<th>Rank</th>
-			<th>Callsign</th>
-			<th>Name</th>
-			<th>Team</th>
-		</thead>
-		<tbody>
-
-			{% for pilot in leaderboard_data %}
-			<tr>
-				<td>{{ pilot.rank }}</td><td>{{ pilot.callsign }}</td><td>{{ pilot.name }}</td><td>{{ pilot.team }}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-
-	<br>
-
-	<h2>1-to-4</h2>
-	<table>
-		<thead>
-			<th>Rank</th>
-			<th>Callsign</th>
-			<th>Name</th>
-			<th>Team</th>
-		</thead>
-		<tbody>
-
-			{% for pilot in top1_4_data %}
-			<tr>
-				<td>{{ pilot.rank }}</td><td>{{ pilot.callsign }}</td><td>{{ pilot.name }}</td><td>{{ pilot.team }}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-
-	<br>
-	<h2>5-to-8</h2>
-	<table>
-		<thead>
-			<th>Rank</th>
-			<th>Callsign</th>
-			<th>Name</th>
-			<th>Team</th>
-		</thead>
-		<tbody>
-
-			{% for pilot in top5_8_data %}
-			<tr>
-				<td>{{ pilot.rank }}</td><td>{{ pilot.callsign }}</td><td>{{ pilot.name }}</td><td>{{ pilot.team }}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+					{% for pilot in leaderboard_data %}
+					<tr>
+						<td>{{ pilot.rank }}</td>
+						<td>{{ pilot.callsign }}</td>
+						<td>{{ pilot.name }}</td>
+						<td>{{ pilot.team }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 	<br>
 
-	<h2>Top8</h2>
-	<table>
-		<thead>
-			<th>Rank</th>
-			<th>Pilot</th>
-			<th>Points</th>
-		</thead>
-		<tbody>
+	<div class="panel collapsing">
+		<div class="panel-header">
+			<h2>1-to-4</h2>
+		</div>
+		<div class="panel-content">
+			<table>
+				<thead>
+					<th>Rank</th>
+					<th>Callsign</th>
+					<th>Name</th>
+					<th>Team</th>
+				</thead>
+				<tbody>
+					{% for pilot in top1_4_data %}
+					<tr>
+						<td>{{ pilot.rank }}</td>
+						<td>{{ pilot.callsign }}</td>
+						<td>{{ pilot.name }}</td>
+						<td>{{ pilot.team }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
-			{% for pilot in top8_data %}
-			<tr>
-				<td>{{ pilot.rank }}</td><td>{{ pilot.name }}</td><td>{{ pilot.points }}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+	<br>
 
+	<div class="panel collapsing">
+		<div class="panel-header">
+			<h2>5-to-8</h2>
+		</div>
+		<div class="panel-content">
+			<table>
+				<thead>
+					<th>Rank</th>
+					<th>Callsign</th>
+					<th>Name</th>
+					<th>Team</th>
+				</thead>
+				<tbody>
+					{% for pilot in top5_8_data %}
+					<tr>
+						<td>{{ pilot.rank }}</td>
+						<td>{{ pilot.callsign }}</td>
+						<td>{{ pilot.name }}</td>
+						<td>{{ pilot.team }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<br>
+
+	<div class="panel collapsing">
+		<div class="panel-header">
+			<h2>Top8 - Classificatórias</h2>
+		</div>
+		<div class="panel-content">
+			<table>
+				<thead>
+					<th>Rank</th>
+					<th>Pilot</th>
+					<th>Points</th>
+				</thead>
+				<tbody>
+					{% for pilot in top8_data %}
+					<tr>
+						<td>{{ pilot.rank }}</td>
+						<td>{{ pilot.name }}</td>
+						<td>{{ pilot.points }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 </main>
 {% endblock %}
