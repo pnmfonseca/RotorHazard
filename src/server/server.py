@@ -1515,7 +1515,7 @@ def on_reset_database(data):
         db_reset_current_laps()
     elif reset_type == 'fullReset':
         db_reset_pilots_full()
-        db_reset_heats()
+        db_reset_heats_full()
         db_reset_classes()
         db_reset_saved_races()
         db_reset_current_laps()
@@ -3762,6 +3762,12 @@ def db_reset_heats():
             DB.session.add(Heat(heat_id=1, node_index=node, class_id=CLASS_ID_NONE, pilot_id=node+1))
     DB.session.commit()
     server_log('Database heats reset')
+
+def db_reset_heats_full():
+    '''Resets database heats to none.'''
+    DB.session.query(Heat).delete()
+    DB.session.commit()
+    server_log('Database heats reset to none')
 
 def db_reset_classes():
     '''Resets database race classes to default.'''
