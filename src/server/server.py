@@ -790,14 +790,14 @@ def populate_pilots():
     
     return Response(response='OK\n', status=200)
 
-@APP.route('/api/pilot/name/<pPilotName>')
+@APP.route('/api/caar/pilot/name/<pPilotName>')
 def api_pilot_name(pPilotName):
 
     pilot = Pilot.query.filter(func.lower(Pilot.name) == func.lower(pPilotName)).first()
 
     return json.dumps({"pilot": pilot}, cls=AlchemyEncoder), 200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
 
-@APP.route('/api/pilot/callsign/<pPilotCallsign>')
+@APP.route('/api/caar/pilot/callsign/<pPilotCallsign>')
 def api_pilot_callsign(pPilotCallsign):
     
     pilot = Pilot.query.filter(func.lower(Pilot.callsign) == func.lower(pPilotCallsign)).first()
