@@ -642,6 +642,94 @@ def imdtabler():
 
     return render_template('imdtabler.html', serverInfo=serverInfo, getOption=getOption, __=__)
 
+# CAAR routes
+@APP.route('/leaderboard', methods=['GET', 'POST'])
+def leaderboard():
+    '''Route to the leaderboard page.'''
+    
+    top8_data = {}
+    top5_8_data = {}
+    top1_4_data = {}
+    leaderboard_data = {}
+    
+    try:
+
+        if request.method == "POST":
+            request_data = request.get_json()
+                
+            _section = request.args.get('section')
+            
+            if _section:
+                server_log(">> Receiving data for section {}".format(_section))
+                with open("{}.json".format(_section), 'w') as outfile:
+                    json.dump(request_data, outfile)
+        else:
+
+            try:
+                with open('top8.json') as json_file:
+                    top8_data = json.load(json_file)
+            except:
+                pass
+
+            try:
+                with open('top5_8.json') as json_file:
+                    top5_8_data = json.load(json_file)
+            except:
+                pass
+
+            try:
+                with open('top1_4.json') as json_file:
+                    top1_4_data = json.load(json_file)
+            except:
+                pass
+            
+            try:
+                with open('leaderboard.json') as json_file:
+                    leaderboard_data = json.load(json_file)
+            except:
+                pass
+                
+            
+    except Exception as ex:
+        server_log(str(ex))
+    finally:
+        return render_template('leaderboard.html', serverInfo=serverInfo, getOption=getOption, __=__,num_nodes=RACE.num_nodes
+        , top8_data = top8_data
+        , top5_8_data = top5_8_data
+        , top1_4_data = top1_4_data
+        , leaderboard_data = leaderboard_data
+        )
+
+@APP.route('/populate_pilots', methods=['POST'])
+@requires_auth
+def populate_pilots():
+    '''Route to populate pilot data in DB. Returns array of pilot IDs'''
+
+    # curl -u admin:rotorhazard -d '[{"callsign": "War", "name": "Paulo Serrao"}, {"callsign": "Pacheco", "name": "Pedro"}, {"callsign": "Ranger", "name": "Paulo Jesus"}]' -H "Content-Type: application/json" -X POST http://localhost:5000/populate_pilots
+
+    if request.method == "POST":
+        request_data = request.get_json()
+        server_log("Received POST with: {0}".format(request_data))
+
+    pilot_ids=[]
+
+    for pilot in request_data:
+        server_log("Adding pilot {0} ({1})".format(pilot["name"], pilot["callsign"]))
+
+        '''Adds the next available pilot id number in the database.'''
+        new_pilot = Pilot(name=pilot["name"],
+                            callsign=pilot["callsign"],
+                            team=DEF_TEAM_NAME,
+                            phonetic = '')
+        DB.session.add(new_pilot)
+        DB.session.flush()
+        # DB.session.refresh(new_pilot)
+        pilot_ids.append(new_pilot.id)
+        server_log('Created new pilot id {0}'.format(new_pilot.id))
+
+    DB.session.commit()
+    return json.dumps(pilot_ids, cls=AlchemyEncoder), 201, {'Content-Type': 'application/json'}
+
 # Debug Routes
 
 @APP.route('/hardwarelog')
