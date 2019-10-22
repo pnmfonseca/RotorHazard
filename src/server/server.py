@@ -766,13 +766,15 @@ def leaderboardPOST():
 @APP.route('/api/caar/populate_pilots', methods=['POST'])
 @requires_auth
 def populate_pilots():
-    '''Route to populate pilot data in DB.'''
+    '''Route to populate pilot data in DB. Returns array of pilot IDs'''
 
     # curl -u admin:rotorhazard -d '[{"callsign": "War", "name": "Paulo Serrao"}, {"callsign": "Pacheco", "name": "Pedro"}, {"callsign": "Ranger", "name": "Paulo Jesus"}]' -H "Content-Type: application/json" -X POST http://localhost:5000/populate_pilots
 
     if request.method == "POST":
         request_data = request.get_json()
-        server_log("Recieved POST with: {0}".format(request_data))
+        server_log("Received POST with: {0}".format(request_data))
+
+    pilot_ids=[]
 
     for pilot in request_data:
         server_log("Adding pilot {0} ({1})".format(pilot["name"], pilot["callsign"]))
@@ -783,12 +785,13 @@ def populate_pilots():
                             team=DEF_TEAM_NAME,
                             phonetic = '')
         DB.session.add(new_pilot)
-        # DB.session.flush()
+        DB.session.flush()
         # DB.session.refresh(new_pilot)
-        DB.session.commit()
+        pilot_ids.append(new_pilot.id)
         server_log('Created new pilot id {0}'.format(new_pilot.id))
-    
-    return Response(response='OK\n', status=200)
+
+    DB.session.commit()
+    return json.dumps(pilot_ids, cls=AlchemyEncoder), 201, {'Content-Type': 'application/json'}
 
 @APP.route('/api/caar/pilot/name/<pPilotName>')
 def api_pilot_name(pPilotName):
