@@ -20,6 +20,7 @@ from collections import OrderedDict
 from flask import Flask, render_template, request, Response, session
 from flask_socketio import SocketIO, emit
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 
 import gevent
 import gevent.monkey
@@ -687,6 +688,30 @@ def leaderboardGET():
         , leaderboard_data = leaderboard_data
         )
 
+@APP.route('/leaderboard', methods=[ 'POST'])
+@requires_auth
+def leaderboardPOST():
+    '''Route to the leaderboard page.'''
+
+    try:
+
+        prefix = "caar-"
+
+        request_data = request.get_json()
+            
+        _section = request.args.get('section')
+
+        if _section:
+            server_log(">> Receiving data for section {}".format(_section))
+            with open("{}{}.json".format(prefix, _section), 'w') as outfile:
+                json.dump(request_data, outfile)
+                
+            
+    except Exception as ex:
+        server_log(str(ex))
+    finally:
+        return Response(response='OK\n', status=200)
+
 @APP.route('/populate_pilots', methods=['POST'])
 @requires_auth
 def populate_pilots():
@@ -714,29 +739,20 @@ def populate_pilots():
     
     return Response(response='OK\n', status=200)
 
-@APP.route('/leaderboard', methods=[ 'POST'])
-@requires_auth
-def leaderboardPOST():
-    '''Route to the leaderboard page.'''
+@APP.route('/api/pilot/name/<pPilotName>')
+def api_pilot_name(pPilotName):
 
-    try:
+    pilot = Pilot.query.filter(func.lower(Pilot.name) == func.lower(pPilotName)).first()
 
-        prefix = "caar-"
+    return json.dumps({"pilot": pilot}, cls=AlchemyEncoder), 200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
 
-        request_data = request.get_json()
-            
-        _section = request.args.get('section')
+@APP.route('/api/pilot/callsign/<pPilotCallsign>')
+def api_pilot_callsign(pPilotCallsign):
+    
+    pilot = Pilot.query.filter(func.lower(Pilot.callsign) == func.lower(pPilotCallsign)).first()
 
-        if _section:
-            server_log(">> Receiving data for section {}".format(_section))
-            with open("{}{}.json".format(prefix, _section), 'w') as outfile:
-                json.dump(request_data, outfile)
-                
-            
-    except Exception as ex:
-        server_log(str(ex))
-    finally:
-        return Response(response='OK\n', status=200)
+    return json.dumps({"pilot": pilot}, cls=AlchemyEncoder), 200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+
 
 # Debug Routes
 
