@@ -291,11 +291,19 @@
 
 		socket.on('heat_data', function (msg) {
 			$('#set_current_heat').empty();
+
+			skipped_heats="";
 			for (var i in msg.heats) {
 				var heat = msg.heats[i];
 
 				// Do not allow this heat if class is Unclassified
 				if (heat.class_id==0){
+					if (heat.note) {
+						name=heat.note+'\n';
+					} else {
+						name=__('Heat') + ' ' + heat.heat_id+'\n';
+					}
+					skipped_heats+=name;
 					continue;
 				}
 
@@ -307,6 +315,11 @@
 					opt.html(__('Heat') + ' ' + heat.heat_id);
 				}
 				$('#set_current_heat').append(opt);
+			}
+
+			// Popup alert if Heats were skipped
+			if (skipped_heats!=""){
+				alert('The following Heats were ignored due to unassigned class:\n'+skipped_heats);
 			}
 
 			socket.emit('load_data', {'load_types': [
@@ -477,7 +490,6 @@
 		});
 
 		$('button#start_race').click(function (event) {
-			alert('aaaaaaa');
 			if(!$(this).prop('disabled')) {
 				socket.emit('stage_race');
 				rotorhazard.timer.stopAll();
