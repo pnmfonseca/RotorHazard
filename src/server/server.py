@@ -698,6 +698,16 @@ def populate_pilots():
         request_data = request.get_json()
         server_log("Recieved POST with: {0}".format(request_data))
 
+    ##TODO Add restricoes de integridade de dados
+    print 'Validate pilots list empty'
+    # Validate empty pilots list
+    pilots_query = DB.session.query(DB.func.count(Pilot.id))
+    count_pilots = pilots_query.scalar()
+    if count_pilots > 0:
+        server_log('Pilots list already exists.')
+        return Response(response='Pilots list already exists.\n', status=409) #409 Conflict
+
+
     for pilot in request_data:
         server_log("Adding pilot {0} ({1})".format(pilot["name"], pilot["callsign"]))
 
