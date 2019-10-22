@@ -20,6 +20,7 @@ from collections import OrderedDict
 from flask import Flask, render_template, request, Response, session
 from flask_socketio import SocketIO, emit
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 
 import gevent
 import gevent.monkey
@@ -642,40 +643,52 @@ def imdtabler():
     return render_template('imdtabler.html', serverInfo=serverInfo, getOption=getOption, __=__)
 
 # CAAR routes
-@APP.route('/leaderboard', methods=[ 'GET'])
-def leaderboardGET():
-
+@APP.route('/leaderboard', methods=['GET', 'POST'])
+def leaderboard():
+    '''Route to the leaderboard page.'''
+    
     top8_data = {}
     top5_8_data = {}
     top1_4_data = {}
     leaderboard_data = {}
-    prefix = "caar-"
-
+    
     try:
 
-        try:
-            with open('{}top8.json'.format(prefix)) as json_file:
-                top8_data = json.load(json_file)
-        except Exception as ex:
-            server_log("{}".format(str(ex)))
+        if request.method == "POST":
+            request_data = request.get_json()
+                
+            _section = request.args.get('section')
+            
+            if _section:
+                server_log(">> Receiving data for section {}".format(_section))
+                with open("{}.json".format(_section), 'w') as outfile:
+                    json.dump(request_data, outfile)
+        else:
 
-        try:
-            with open('{}top5_8.json'.format(prefix)) as json_file:
-                top5_8_data = json.load(json_file)
-        except Exception as ex:
-            server_log("{}".format(str(ex)))
+            try:
+                with open('top8.json') as json_file:
+                    top8_data = json.load(json_file)
+            except:
+                pass
 
-        try:
-            with open('{}top1_4.json'.format(prefix)) as json_file:
-                top1_4_data = json.load(json_file)
-        except Exception as ex:
-            server_log("{}".format(str(ex)))
-        
-        try:
-            with open('{}leaderboard.json'.format(prefix)) as json_file:
-                leaderboard_data = json.load(json_file)
-        except Exception as ex:
-            server_log("{}".format(str(ex)))
+            try:
+                with open('top5_8.json') as json_file:
+                    top5_8_data = json.load(json_file)
+            except:
+                pass
+
+            try:
+                with open('top1_4.json') as json_file:
+                    top1_4_data = json.load(json_file)
+            except:
+                pass
+            
+            try:
+                with open('leaderboard.json') as json_file:
+                    leaderboard_data = json.load(json_file)
+            except:
+                pass
+                
             
     except Exception as ex:
         server_log(str(ex))
@@ -686,57 +699,6 @@ def leaderboardGET():
         , top1_4_data = top1_4_data
         , leaderboard_data = leaderboard_data
         )
-
-@APP.route('/populate_pilots', methods=['POST'])
-@requires_auth
-def populate_pilots():
-    '''Route to populate pilot data in DB.'''
-
-    # curl -u admin:rotorhazard -d '[{"callsign": "War", "name": "Paulo Serrao"}, {"callsign": "Pacheco", "name": "Pedro"}, {"callsign": "Ranger", "name": "Paulo Jesus"}]' -H "Content-Type: application/json" -X POST http://localhost:5000/populate_pilots
-
-    if request.method == "POST":
-        request_data = request.get_json()
-        server_log("Recieved POST with: {0}".format(request_data))
-
-    for pilot in request_data:
-        server_log("Adding pilot {0} ({1})".format(pilot["name"], pilot["callsign"]))
-
-        '''Adds the next available pilot id number in the database.'''
-        new_pilot = Pilot(name=pilot["name"],
-                            callsign=pilot["callsign"],
-                            team=DEF_TEAM_NAME,
-                            phonetic = '')
-        DB.session.add(new_pilot)
-        # DB.session.flush()
-        # DB.session.refresh(new_pilot)
-        DB.session.commit()
-        server_log('Created new pilot id {0}'.format(new_pilot.id))
-    
-    return Response(response='OK\n', status=200)
-
-@APP.route('/leaderboard', methods=[ 'POST'])
-@requires_auth
-def leaderboardPOST():
-    '''Route to the leaderboard page.'''
-
-    try:
-
-        prefix = "caar-"
-
-        request_data = request.get_json()
-            
-        _section = request.args.get('section')
-
-        if _section:
-            server_log(">> Receiving data for section {}".format(_section))
-            with open("{}{}.json".format(prefix, _section), 'w') as outfile:
-                json.dump(request_data, outfile)
-                
-            
-    except Exception as ex:
-        server_log(str(ex))
-    finally:
-        return Response(response='OK\n', status=200)
 
 # Debug Routes
 
@@ -788,6 +750,129 @@ class AlchemyEncoder(json.JSONEncoder):
             return fields
 
         return json.JSONEncoder.default(self, obj)
+
+### CAAR routes ###
+@APP.route('/leaderboard', methods=[ 'GET'])
+def leaderboardGET():
+
+    top8_data = {}
+    top5_8_data = {}
+    top1_4_data = {}
+    leaderboard_data = {}
+    prefix = "caar-"
+
+    try:
+
+        try:
+            with open('{}top8.json'.format(prefix)) as json_file:
+                top8_data = json.load(json_file)
+        except Exception as ex:
+            server_log("{}".format(str(ex)))
+
+        try:
+            with open('{}top5_8.json'.format(prefix)) as json_file:
+                top5_8_data = json.load(json_file)
+        except Exception as ex:
+            server_log("{}".format(str(ex)))
+
+        try:
+            with open('{}top1_4.json'.format(prefix)) as json_file:
+                top1_4_data = json.load(json_file)
+        except Exception as ex:
+            server_log("{}".format(str(ex)))
+        
+        try:
+            with open('{}leaderboard.json'.format(prefix)) as json_file:
+                leaderboard_data = json.load(json_file)
+        except Exception as ex:
+            server_log("{}".format(str(ex)))
+            
+    except Exception as ex:
+        server_log(str(ex))
+    finally:
+        return render_template('leaderboard.html', serverInfo=serverInfo, getOption=getOption, __=__,num_nodes=RACE.num_nodes
+        , top8_data = top8_data
+        , top5_8_data = top5_8_data
+        , top1_4_data = top1_4_data
+        , leaderboard_data = leaderboard_data
+        )
+
+@APP.route('/api/caar/leaderboard', methods=[ 'POST'])
+@requires_auth
+def leaderboardPOST():
+    '''Route to the leaderboard page.'''
+
+    try:
+
+        prefix = "caar-"
+
+        request_data = request.get_json()
+            
+        _section = request.args.get('section')
+
+        if _section:
+            server_log(">> Receiving data for section {}".format(_section))
+            with open("{}{}.json".format(prefix, _section), 'w') as outfile:
+                json.dump(request_data, outfile)
+                
+            
+    except Exception as ex:
+        server_log(str(ex))
+    finally:
+        return Response(response='OK\n', status=200)
+
+@APP.route('/api/caar/populate_pilots', methods=['POST'])
+@requires_auth
+def populate_pilots():
+    '''Route to populate pilot data in DB. Returns array of pilot IDs'''
+
+    # curl -u admin:rotorhazard -d '[{"callsign": "War", "name": "Paulo Serrao"}, {"callsign": "Pacheco", "name": "Pedro"}, {"callsign": "Ranger", "name": "Paulo Jesus"}]' -H "Content-Type: application/json" -X POST http://localhost:5000/populate_pilots
+
+    if request.method == "POST":
+        request_data = request.get_json()
+        server_log("Received POST with: {0}".format(request_data))
+
+    pilot_ids=[]
+
+    for pilot in request_data:
+        server_log("Adding pilot {0} ({1})".format(pilot["name"], pilot["callsign"]))
+
+        '''Adds the next available pilot id number in the database.'''
+        new_pilot = Pilot(name=pilot["name"],
+                            callsign=pilot["callsign"],
+                            team=DEF_TEAM_NAME,
+                            phonetic = '')
+        DB.session.add(new_pilot)
+        DB.session.flush()
+        # DB.session.refresh(new_pilot)
+        pilot_ids.append(new_pilot.id)
+        server_log('Created new pilot id {0}'.format(new_pilot.id))
+
+    DB.session.commit()
+    return json.dumps(pilot_ids, cls=AlchemyEncoder), 201, {'Content-Type': 'application/json'}
+
+@APP.route('/api/caar/pilot/name/<pPilotName>')
+def api_pilot_name(pPilotName):
+
+    pilot = Pilot.query.filter(func.lower(Pilot.name) == func.lower(pPilotName)).first()
+
+    return json.dumps({"pilot": pilot}, cls=AlchemyEncoder), 200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+
+@APP.route('/api/caar/pilot/callsign/<pPilotCallsign>')
+def api_pilot_callsign(pPilotCallsign):
+    
+    pilot = Pilot.query.filter(func.lower(Pilot.callsign) == func.lower(pPilotCallsign)).first()
+
+    return json.dumps({"pilot": pilot}, cls=AlchemyEncoder), 200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+
+@APP.route("/api/caar/heat/create", methods=["POST"])
+def api_create_heat():
+    print ">>> api_create_heat"
+    #SOCKET_IO.emit('add_heat')
+    on_add_heat_caar(1,"teste")
+    return Response(response='WORK IN PROGRESS!\n', status=200)
+
+### CAAR routes ###
 
 @APP.route('/api/pilot/all')
 def api_pilot_all():
@@ -1284,6 +1369,27 @@ def on_add_heat():
     server_log('Heat added: Heat {0}'.format(max_heat_id+1))
     emit_heat_data() # Settings page, new pilot position in heats
 
+def on_add_heat_caar(pPilotID, pNote):
+    '''Adds a Heat from CAAR's API client.'''
+    max_heat_id = DB.session.query(DB.func.max(Heat.heat_id)).scalar()
+    for node in range(RACE.num_nodes): # Add next heat with pilots 1 thru 5
+        # id = DB.Column(DB.Integer, primary_key=True)
+        # heat_id = DB.Column(DB.Integer, nullable=False)
+        # node_index = DB.Column(DB.Integer, nullable=False)
+        # pilot_id = DB.Column(DB.Integer, nullable=False)
+        # note = DB.Column(DB.String(80), nullable=True)
+        # class_id = DB.Column(DB.Integer, nullable=False)
+        heat =  Heat(heat_id=max_heat_id+1, 
+                node_index=node, 
+                pilot_id=pPilotID,
+                note=pNote, 
+                class_id=CLASS_ID_NONE)
+        DB.session.add(heat)
+
+    DB.session.commit()
+    server_log('CAAR Heat added: Heat {0}'.format(max_heat_id+1))
+    emit_heat_data() # Settings page, new pilot position in heats
+
 @SOCKET_IO.on('alter_heat')
 def on_alter_heat(data):
     '''Update heat.'''
@@ -1510,6 +1616,12 @@ def on_reset_database(data):
     elif reset_type == 'all':
         db_reset_pilots()
         db_reset_heats()
+        db_reset_classes()
+        db_reset_saved_races()
+        db_reset_current_laps()
+    elif reset_type == 'fullReset':
+        db_reset_pilots_full()
+        db_reset_heats_full()
         db_reset_classes()
         db_reset_saved_races()
         db_reset_current_laps()
@@ -3740,6 +3852,12 @@ def db_reset_pilots():
     DB.session.commit()
     server_log('Database pilots reset')
 
+def db_reset_pilots_full():
+    '''Resets database pilots to none.'''
+    DB.session.query(Pilot).delete()
+    DB.session.commit()
+    server_log('Database pilots reset to none')    
+
 def db_reset_heats():
     '''Resets database heats to default.'''
     DB.session.query(Heat).delete()
@@ -3750,6 +3868,12 @@ def db_reset_heats():
             DB.session.add(Heat(heat_id=1, node_index=node, class_id=CLASS_ID_NONE, pilot_id=node+1))
     DB.session.commit()
     server_log('Database heats reset')
+
+def db_reset_heats_full():
+    '''Resets database heats to none.'''
+    DB.session.query(Heat).delete()
+    DB.session.commit()
+    server_log('Database heats reset to none')
 
 def db_reset_classes():
     '''Resets database race classes to default.'''

@@ -3,26 +3,8 @@
 
 
 	$(document).ready(function () {
-		var VERDE=100;
 
-
-		$('td').click(function () {
-
-			pinta ($(this).text());
-			
-			return false;
-		});
-
-		function pinta(pTexto) {
-			var cor="rgb(121," + VERDE +",121)";
-			$('td').filter(function(){
-	  			return $(this).text() === pTexto;
-			}).each(function(){
-				$(this).parent().css({"background":cor});
-				VERDE=VERDE+30;
-			});
-	}
-});
+	});
 
 </script>
 {% endblock %}
