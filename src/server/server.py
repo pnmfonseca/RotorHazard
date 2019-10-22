@@ -1513,6 +1513,12 @@ def on_reset_database(data):
         db_reset_classes()
         db_reset_saved_races()
         db_reset_current_laps()
+    elif reset_type == 'fullReset':
+        db_reset_pilots_full()
+        db_reset_heats()
+        db_reset_classes()
+        db_reset_saved_races()
+        db_reset_current_laps()
     emit_heat_data()
     emit_pilot_data()
     emit_race_format()
@@ -3739,6 +3745,12 @@ def db_reset_pilots():
             name='Pilot {0} Name'.format(node+1), team=DEF_TEAM_NAME, phonetic=''))
     DB.session.commit()
     server_log('Database pilots reset')
+
+def db_reset_pilots_full():
+    '''Resets database pilots to none.'''
+    DB.session.query(Pilot).delete()
+    DB.session.commit()
+    server_log('Database pilots reset to none')    
 
 def db_reset_heats():
     '''Resets database heats to default.'''
