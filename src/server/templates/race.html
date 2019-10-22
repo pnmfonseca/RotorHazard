@@ -293,6 +293,12 @@
 			$('#set_current_heat').empty();
 			for (var i in msg.heats) {
 				var heat = msg.heats[i];
+
+				// Do not allow this heat if class is Unclassified
+				if (heat.class_id==0){
+					continue;
+				}
+
 				var opt = $('<option value="' + heat.heat_id + '">');
 
 				if (heat.note) {
@@ -471,6 +477,7 @@
 		});
 
 		$('button#start_race').click(function (event) {
+			alert('aaaaaaa');
 			if(!$(this).prop('disabled')) {
 				socket.emit('stage_race');
 				rotorhazard.timer.stopAll();
