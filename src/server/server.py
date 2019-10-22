@@ -744,14 +744,14 @@ def api_pilot_name(pPilotName):
 
     pilot = Pilot.query.filter(func.lower(Pilot.name) == func.lower(pPilotName)).first()
 
-    return json.dumps({"pilot": pilot}, cls=AlchemyEncoder), 201, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+    return json.dumps({"pilot": pilot}, cls=AlchemyEncoder), 200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
 
 @APP.route('/api/pilot/callsign/<pPilotCallsign>')
 def api_pilot_callsign(pPilotCallsign):
     
     pilot = Pilot.query.filter(func.lower(Pilot.callsign) == func.lower(pPilotCallsign)).first()
 
-    return json.dumps({"pilot": pilot}, cls=AlchemyEncoder), 201, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+    return json.dumps({"pilot": pilot}, cls=AlchemyEncoder), 200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
 
 
 # Debug Routes
