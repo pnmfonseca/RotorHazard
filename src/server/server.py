@@ -826,11 +826,20 @@ def leaderboardPOST():
 def populate_pilots():
     '''Route to populate pilot data in DB. Returns array of pilot IDs'''
 
-    # curl -u admin:rotorhazard -d '[{"callsign": "War", "name": "Paulo Serrao"}, {"callsign": "Pacheco", "name": "Pedro"}, {"callsign": "Ranger", "name": "Paulo Jesus"}]' -H "Content-Type: application/json" -X POST http://localhost:5000/populate_pilots
+    # curl -u admin:rotorhazard -d '[{"callsign": "War", "name": "Paulo Serrao"}, {"callsign": "Pacheco", "name": "Pedro"}, {"callsign": "Ranger", "name": "Paulo Jesus"}]' -H "Content-Type: application/json" -X POST http://localhost:5000/api/caar/populate_pilots
 
     if request.method == "POST":
         request_data = request.get_json()
         server_log("Received POST with: {0}".format(request_data))
+
+    print 'Validate pilots table is empty'
+    # Validate pilots table is empty
+    pilots_query = DB.session.query(DB.func.count(Pilot.id))
+    count_pilots = pilots_query.scalar()
+    if count_pilots > 0:
+        s = 'Pilots table not empty. Please, clear tables before submit.'
+        server_log(s)
+        return Response(response=s+'\n', status=409)
 
     pilot_ids=[]
 
