@@ -763,7 +763,7 @@ def leaderboardPOST():
     finally:
         return Response(response='OK\n', status=200)
 
-@APP.route('/api/caar/populate_pilots', methods=['POST'])
+@APP.route('/api/caar/pilot/populate', methods=['POST'])
 @requires_auth
 def populate_pilots():
     '''Route to populate pilot data in DB. Returns array of pilot IDs'''
@@ -806,6 +806,12 @@ def api_pilot_callsign(pPilotCallsign):
     pilot = Pilot.query.filter(func.lower(Pilot.callsign) == func.lower(pPilotCallsign)).first()
 
     return json.dumps({"pilot": pilot}, cls=AlchemyEncoder), 200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+
+@APP.route("/api/caar/class/create", methods=["POST"])
+@requires_auth
+def api_create_class():
+    pass
+    return Response(response='Create Class is WIP!\n', status=200)
 
 @APP.route("/api/caar/heat/create", methods=["POST"])
 def api_create_heat():
