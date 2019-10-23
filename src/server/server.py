@@ -768,30 +768,33 @@ def leaderboardPOST():
 def populate_pilots():
     '''Route to populate pilot data in DB. Returns array of pilot IDs'''
 
-    # curl -u admin:rotorhazard -d '[{"callsign": "War", "name": "Paulo Serrao"}, {"callsign": "Pacheco", "name": "Pedro"}, {"callsign": "Ranger", "name": "Paulo Jesus"}]' -H "Content-Type: application/json" -X POST http://localhost:5000/populate_pilots
-
     if request.method == "POST":
-        request_data = request.get_json()
-        server_log("Received POST with: {0}".format(request_data))
+        data = request.get_json()
+        server_log("Received POST with: {0}".format(data))
 
-    pilot_ids=[]
+        pilot_ids=[]
 
-    for pilot in request_data:
-        server_log("Adding pilot {0} ({1})".format(pilot["name"], pilot["callsign"]))
+        
+        for pilot in data.get("pilots"):
+            server_log("Adding pilot {0} ({1})".format(pilot["name"], pilot["callsign"]))
 
-        '''Adds the next available pilot id number in the database.'''
-        new_pilot = Pilot(name=pilot["name"],
-                            callsign=pilot["callsign"],
-                            team=DEF_TEAM_NAME,
-                            phonetic = '')
-        DB.session.add(new_pilot)
-        DB.session.flush()
-        # DB.session.refresh(new_pilot)
-        pilot_ids.append(new_pilot.id)
-        server_log('Created new pilot id {0}'.format(new_pilot.id))
+            '''Adds the next available pilot id number in the database.'''
+            new_pilot = Pilot(name=pilot["name"],
+                                callsign=pilot["callsign"],
+                                team=DEF_TEAM_NAME,
+                                phonetic = '')
+            DB.session.add(new_pilot)
+            DB.session.flush()
+            # DB.session.refresh(new_pilot)
+            pilot_ids.append(new_pilot.id)
+            server_log('Created new pilot id {0}'.format(new_pilot.id))
 
-    DB.session.commit()
-    return json.dumps(pilot_ids, cls=AlchemyEncoder), 201, {'Content-Type': 'application/json'}
+        DB.session.commit()
+        return json.dumps(pilot_ids, cls=AlchemyEncoder), 201, {'Content-Type': 'application/json'}
+    
+    else:
+
+        return Response("",405)
 
 @APP.route('/api/caar/pilot/name/<pPilotName>')
 def api_pilot_name(pPilotName):
