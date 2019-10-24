@@ -837,6 +837,21 @@ def api_create_heat():
     on_add_heat_caar(1,"teste")
     return Response(response='WORK IN PROGRESS!\n', status=200)
 
+@APP.route("/api/caar/event/qualifiers/setup", methods=["POST"])
+@requires_auth
+def api_setup_qualifiers_caar():
+    data = request.get_json()
+    server_log("Received POST with: {0}".format(data))
+
+    for _data in data["classes"]:
+        print _data["class"]["name"]
+        for _heat in _data["class"]["heats"]:
+            print "-" * 2,"Heat", _heat["note"]
+            for _pilot_id in _heat["pilot_id"]:
+                print "-" * 4,"Pilot", _pilot_id
+
+    return Response("",204)
+
 ### CAAR routes ###
 
 @APP.route('/api/pilot/all')
