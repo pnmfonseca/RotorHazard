@@ -772,8 +772,10 @@ def populate_pilots():
         data = request.get_json()
         server_log("Received POST with: {0}".format(data))
 
-        pilot_ids=[]
-
+        #pilot_ids=[]
+        
+        pilots=[]
+        pilots_data={}
         
         for pilot in data.get("pilots"):
             server_log("Adding pilot {0} ({1})".format(pilot["name"], pilot["callsign"]))
@@ -786,11 +788,23 @@ def populate_pilots():
             DB.session.add(new_pilot)
             DB.session.flush()
             # DB.session.refresh(new_pilot)
-            pilot_ids.append(new_pilot.id)
-            server_log('Created new pilot id {0}'.format(new_pilot.id))
+            
+            pilot = {}
+            pilot["id"] = new_pilot.id
+            pilot["name"] = new_pilot.name
+            pilot["callsign"] = new_pilot.callsign
+            pilots.append(pilot)
+
+            #pilot_ids.append(new_pilot.id)
+        
+            server_log('Created new pilot id {}, name {}'.format(new_pilot.id, new_pilot.callsign))
 
         DB.session.commit()
-        return json.dumps(pilot_ids, cls=AlchemyEncoder), 201, {'Content-Type': 'application/json'}
+
+        pilots_data["pilots"] = pilots
+        
+        return json.dumps(pilots_data), 201, {'Content-Type': 'application/json'}
+        #return json.dumps(pilot_ids, cls=AlchemyEncoder), 201, {'Content-Type': 'application/json'}
     
     else:
 
