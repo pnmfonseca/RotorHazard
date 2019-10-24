@@ -843,12 +843,32 @@ def api_setup_qualifiers_caar():
     data = request.get_json()
     server_log("Received POST with: {0}".format(data))
 
-    for _data in data["classes"]:
-        print _data["class"]["name"]
-        for _heat in _data["class"]["heats"]:
-            print "-" * 2,"Heat", _heat["note"]
-            for _pilot_id in _heat["pilot_id"]:
-                print "-" * 4,"Pilot", _pilot_id
+    for class_heats in data["classes"]:
+        #print class_heats["class"]["name"]
+        #Create new Class
+        new_race_class = RaceClass(name=class_heats["class"]["name"], format_id=4)
+        DB.session.add(new_race_class)
+        DB.session.flush()
+        server_log('Added Class {}({})'.format(class_heats["class"]["name"],new_race_class.id))
+
+        for heat in class_heats["class"]["heats"]:
+            #print "-" * 2,"Heat", heat["note"]
+            # Get last heat id from DB (new heat will be created with next id)
+            max_heat_id = DB.session.query(DB.func.max(Heat.heat_id)).scalar()
+            if max_heat_id == None: #DB is empty
+                max_heat_id=0
+            node=0
+            for pilot_id in heat["pilot_id"]:
+                #print "-" * 4,"Pilot", pilot_id
+                #Create Heat and associate pilots
+                DB.session.add(Heat(heat_id=max_heat_id+1, node_index=node, pilot_id=pilot_id, class_id=new_race_class.id, note=heat["note"]))
+                server_log('Pilot {} added to Heat {}({}) from {} on node {}'.format(pilot_id, heat["note"], max_heat_id+1, class_heats["class"]["name"], node))
+                node=node+1
+            #Add empty pilots to complete heat positions (#nodes)
+            for node in range(node-1, RACE.num_nodes):
+                DB.session.add(Heat(heat_id=max_heat_id+1, node_index=node, pilot_id=0, class_id=new_race_class.id, note=heat["note"]))
+
+        DB.session.commit()
 
     return Response("",204)
 
