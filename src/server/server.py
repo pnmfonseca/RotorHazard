@@ -870,7 +870,7 @@ def api_setup_qualifiers_caar():
 
         DB.session.commit()
 
-    return Response("",204)
+    return Response("Qualifiers set up!",201)
 
 ### CAAR routes ###
 
