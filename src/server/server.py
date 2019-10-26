@@ -850,6 +850,7 @@ def api_setup_qualifiers_caar():
         DB.session.add(new_race_class)
         DB.session.flush()
         server_log('Added Class {}({})'.format(class_heats["class"]["name"],new_race_class.id))
+        class_heats["class"]["id"]=new_race_class.id
 
         for heat in class_heats["class"]["heats"]:
             #print "-" * 2,"Heat", heat["note"]
@@ -867,10 +868,11 @@ def api_setup_qualifiers_caar():
             #Add empty pilots to complete heat positions (#nodes)
             for node in range(node-1, RACE.num_nodes):
                 DB.session.add(Heat(heat_id=max_heat_id+1, node_index=node, pilot_id=0, class_id=new_race_class.id, note=heat["note"]))
+            heat["id"]=max_heat_id+1
 
         DB.session.commit()
 
-    return Response("Qualifiers set up!",201)
+    return json.dumps(data),201, {'Content-Type': 'application/json'}
 
 ### CAAR routes ###
 
