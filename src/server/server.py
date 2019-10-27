@@ -762,6 +762,38 @@ def leaderboardPOST():
         server_log(str(ex))
     finally:
         return Response(response='OK\n', status=200)
+    
+    
+    
+#{{ rpi_caar_api }}/classboard?section=classboard
+@APP.route('/api/caar/classboard', methods=[ 'POST'])
+#@requires_auth
+def classboardPOST():
+    '''Route to the classBoard page.'''
+
+    try:
+
+        prefix = "caar-"
+
+        request_data = request.get_json()
+
+        _section = request.args.get('section')
+
+        if _section:
+            server_log(">> Receiving data for section {}".format(_section))
+            if _section == "classboard":  #FIXME  If's filter not work
+                with open("{}{}.json".format(prefix, _section), 'w') as outfile:
+                    json.dump(request_data, outfile)
+            else:
+                return  501 # Not implemented
+
+    except Exception as ex:
+        server_log(str(ex))
+        return 500
+    finally:
+        return Response(response='OK\n', status=200)
+    
+    
 
 @APP.route('/api/caar/pilot/populate', methods=['POST'])
 @requires_auth
