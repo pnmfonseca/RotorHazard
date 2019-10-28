@@ -739,6 +739,8 @@ def leaderboardGET():
         , leaderboard_data = leaderboard_data
         )
 
+
+
 @APP.route('/api/caar/leaderboard', methods=[ 'POST'])
 @requires_auth
 def leaderboardPOST():
@@ -764,6 +766,11 @@ def leaderboardPOST():
         return Response(response='OK\n', status=200)
     
     
+@APP.route('/classboard', methods=[ 'GET'])
+def classboardGET():
+    '''Route to classboard  page.'''
+    return render_template('classboard.html', serverInfo=serverInfo, getOption=getOption, __=__)
+
     
 #{{ rpi_caar_api }}/classboard?section=classboard
 @APP.route('/api/caar/classboard', methods=[ 'POST'])
