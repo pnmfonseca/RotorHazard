@@ -49,10 +49,10 @@
 				}
 			}
 		});
-		
+
 		socket.on('heat_data', function (msg) {
 
-			//CAAR 1 - Add classes 
+			//CAAR 1 - Add classes
 			$(".caarheats").empty();
 			var bc = $('<div>');
 			for (var i in msg.classes ){
@@ -68,9 +68,8 @@
 			}
 			//add to DOM
 			bc.appendTo($(".caarheats"));
-			
-			
-			//add content    
+
+			//add content
 			for (var i in msg.heats) {
 				var heats = msg.heats[i];
 				var el = $('<li>');
@@ -115,11 +114,10 @@
 				}
 
 				//add to DOM
-            	var className = 'caarclassheats_' + heats.class_id;
-            	console.log(heats.heat_id +'   '  + heats.class_id);
-	    		el.appendTo($( '#' + className + ' ' + String.fromCharCode(46) + 'heats' ));
+				var className = 'caarclassheats_' + heats.class_id;
+				console.log(heats.heat_id +'   '  + heats.class_id);
+				el.appendTo($( '#' + className + ' ' + String.fromCharCode(46) + 'heats' ));
 
-				
 			}
 			freq.updateBlocks();
 		});

@@ -598,6 +598,13 @@ def heats():
     '''Route to heat summary page.'''
     return render_template('heats.html', serverInfo=serverInfo, getOption=getOption, __=__)
 
+@APP.route('/caar-heats')
+def caarheats():
+    '''Route to heat summary page.'''
+    return render_template('caar-heats.html', serverInfo=serverInfo, getOption=getOption, __=__)
+
+
+
 @APP.route('/results')
 def results():
     '''Route to round summary page.'''
@@ -739,8 +746,6 @@ def leaderboardGET():
         , leaderboard_data = leaderboard_data
         )
 
-
-
 @APP.route('/api/caar/leaderboard', methods=[ 'POST'])
 @requires_auth
 def leaderboardPOST():
@@ -764,43 +769,6 @@ def leaderboardPOST():
         server_log(str(ex))
     finally:
         return Response(response='OK\n', status=200)
-    
-    
-@APP.route('/classboard', methods=[ 'GET'])
-def classboardGET():
-    '''Route to classboard  page.'''
-    return render_template('classboard.html', serverInfo=serverInfo, getOption=getOption, __=__)
-
-    
-#{{ rpi_caar_api }}/classboard?section=classboard
-@APP.route('/api/caar/classboard', methods=[ 'POST'])
-#@requires_auth
-def classboardPOST():
-    '''Route to the classBoard page.'''
-
-    try:
-
-        prefix = "caar-"
-
-        request_data = request.get_json()
-
-        _section = request.args.get('section')
-
-        if _section:
-            server_log(">> Receiving data for section {}".format(_section))
-            if _section == "classboard":  #FIXME  If's filter not work
-                with open("{}{}.json".format(prefix, _section), 'w') as outfile:
-                    json.dump(request_data, outfile)
-            else:
-                return  501 # Not implemented
-
-    except Exception as ex:
-        server_log(str(ex))
-        return 500
-    finally:
-        return Response(response='OK\n', status=200)
-    
-    
 
 @APP.route('/api/caar/pilot/populate', methods=['POST'])
 @requires_auth
