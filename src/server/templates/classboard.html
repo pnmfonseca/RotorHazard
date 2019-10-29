@@ -50,8 +50,14 @@
 			}
 		});
 
+
+
 		socket.on('heat_data', function (msg) {
-			$(".heats").empty();
+		//	$(".heats").empty();
+		//	return 0;
+		
+			var el_pj  = $('<ol class="heats">');
+		
 			for (var i in msg.heats) {
 				var heats = msg.heats[i];
 				var el = $('<li>');
@@ -95,21 +101,17 @@
 					}
 				}
 
-				el.appendTo($('.heats'));
+//el.appendTo($('.heats'));
+el.appendTo(el_pj);
+// Add ao classGroup do elemento
+var className = String.fromCharCode(46) + ('caarheats_' + msg.classes[i].name).replace(/[^a-zA-Z0-9]/g,'_');
+//	$(className).empty();
+el_pj.appendTo($(className));
+				
 			}
 			freq.updateBlocks();
-			
-			//CAAR  proof of concept //
-			/*
-			heat = {'pilots': pilots,   
-		            'note': note,
-		            'heat_id': heat_id,
-		            'class_id': race_class,
-		            'locked': locked}
-			 */
-			
-			
 		});
+
 
 		socket.on('class_data', function (msg) {
 			$(".race_classes").empty();
@@ -165,7 +167,7 @@
 	        current_class['locked'] = True/False
 	        */
 	        
-	        
+	        /*
 	        $(".caarheats").empty();
 			
 	        if (msg.classes.length) {
@@ -187,7 +189,7 @@
 	        } else {
 	        	$('.caarheats').append('<p class="form-note">' + __('This is a single-class event.') + '</p>');
 	        }
-	        
+	        */
 	        
 			 
 	        
@@ -206,18 +208,310 @@
 </div>
 
 
+
 <!--Display the heats-->
 <h2>{{ __('CAAR Heats') }}</h2>
 <ol class="caarheats">
-	<li class="heat">{{ __('Loading...') }}</li>
+    <!--  <li class="heat">{{ __('Loading...') }}</li>  -->
+    <div>
+        <div class="panel collapsing">
+            <div class="panel-header">
+                <h2>Round Q1</h2>
+            </div>
+            <div class="panel-content">
+                <div class="caarheats_Round_Q1">
+                    <ol class="heats">
+                        <li>
+                            <h3>Heat 1</h3>
+                            <ol>
+                                <li>
+                                    <div class="channel-block" data-node="0">
+                                        <span class="ch">R1</span>
+                                        <span class="fr">5658</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 1</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="1">
+                                        <span class="ch">R2</span>
+                                        <span class="fr">5695</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 2</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="2">
+                                        <span class="ch">R3</span>
+                                        <span class="fr">5732</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 3</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="3">
+                                        <span class="ch">R4</span>
+                                        <span class="fr">5769</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 4</div>
+                                </li>
+                            </ol>
+                            <div class="race_class">Round Q1</div>
+                        </li>
+                        <li>
+                            <h3>Heat 2</h3>
+                            <ol>
+                                <li>
+                                    <div class="channel-block" data-node="0">
+                                        <span class="ch">R1</span>
+                                        <span class="fr">5658</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 5</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="1">
+                                        <span class="ch">R2</span>
+                                        <span class="fr">5695</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 6</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="2">
+                                        <span class="ch">R3</span>
+                                        <span class="fr">5732</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 7</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="3">
+                                        <span class="ch">R4</span>
+                                        <span class="fr">5769</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 8</div>
+                                </li>
+                            </ol>
+                            <div class="race_class">Round Q1</div>
+                        </li>
+                        <li>
+                            <h3>Heat 3</h3>
+                            <ol>
+                                <li>
+                                    <div class="channel-block" data-node="0">
+                                        <span class="ch">R1</span>
+                                        <span class="fr">5658</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 6</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="1">
+                                        <span class="ch">R2</span>
+                                        <span class="fr">5695</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 7</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="2">
+                                        <span class="ch">R3</span>
+                                        <span class="fr">5732</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 8</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="3">
+                                        <span class="ch">R4</span>
+                                        <span class="fr">5769</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 9</div>
+                                </li>
+                            </ol>
+                            <div class="race_class">Round Q1</div>
+                        </li>
+                        <li>
+                            <h3>Heat 4</h3>
+                            <ol>
+                                <li>
+                                    <div class="channel-block" data-node="0">
+                                        <span class="ch">R1</span>
+                                        <span class="fr">5658</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 9</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="1">
+                                        <span class="ch">R2</span>
+                                        <span class="fr">5695</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 10</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="2">
+                                        <span class="ch">R3</span>
+                                        <span class="fr">5732</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 11</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="3">
+                                        <span class="ch">R4</span>
+                                        <span class="fr">5769</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 12</div>
+                                </li>
+                            </ol>
+                            <div class="race_class">Round Q1</div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>            
+        <div class="panel collapsing"> 
+            <div class="panel-header">
+                <h2>Round Q2</h2>
+            </div>   
+            <div class="panel-content">
+                <div class="caarheats_Round_Q2"> 
+                    <ol class="heats">
+                        <li>
+                            <h3>Heat 5</h3>
+                            <ol>
+                                <li>
+                                    <div class="channel-block" data-node="0">
+                                        <span class="ch">R1</span>
+                                        <span class="fr">5658</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 1</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="1">
+                                        <span class="ch">R2</span>
+                                        <span class="fr">5695</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 2</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="2">
+                                        <span class="ch">R3</span>
+                                        <span class="fr">5732</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 3</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="3">
+                                        <span class="ch">R4</span>
+                                        <span class="fr">5769</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 4</div>
+                                </li>
+                            </ol>
+                            <div class="race_class">Round Q2</div>
+                        </li>
+                        <li>
+                            <h3>Heat 6</h3>
+                            <ol>
+                                <li>
+                                    <div class="channel-block" data-node="0">
+                                        <span class="ch">R1</span>
+                                        <span class="fr">5658</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 5</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="1">
+                                        <span class="ch">R2</span>
+                                        <span class="fr">5695</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 6</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="2">
+                                        <span class="ch">R3</span>
+                                        <span class="fr">5732</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 7</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="3">
+                                        <span class="ch">R4</span>
+                                        <span class="fr">5769</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 8</div>
+                                </li>
+                            </ol>
+                            <div class="race_class">Round Q2</div>
+                        </li>
+                        <li>
+                            <h3>Heat 7</h3>
+                            <ol>
+                                <li>
+                                    <div class="channel-block" data-node="0">
+                                        <span class="ch">R1</span>
+                                        <span class="fr">5658</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 6</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="1">
+                                        <span class="ch">R2</span>
+                                        <span class="fr">5695</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 7</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="2">
+                                        <span class="ch">R3</span>
+                                        <span class="fr">5732</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 8</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="3">
+                                        <span class="ch">R4</span>
+                                        <span class="fr">5769</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 9</div>
+                                </li>
+                            </ol>
+                            <div class="race_class">Round Q2</div>
+                        </li>
+                        <li>
+                            <h3>Heat 8</h3>
+                            <ol>
+                                <li>
+                                    <div class="channel-block" data-node="0">
+                                        <span class="ch">R1</span>
+                                        <span class="fr">5658</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 9</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="1">
+                                        <span class="ch">R2</span>
+                                        <span class="fr">5695</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 10</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="2">
+                                        <span class="ch">R3</span>
+                                        <span class="fr">5732</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 11</div>
+                                </li>
+                                <li>
+                                    <div class="channel-block" data-node="3">
+                                        <span class="ch">R4</span>
+                                        <span class="fr">5769</span>
+                                    </div>
+                                    <div class="pilot-name">Callsign 12</div>
+                                </li>
+                            </ol>
+                            <div class="race_class">Round Q2</div>
+                        </li>
+                    </ol>
+                </div>      
+            </div>
+        </div>
+    </div>
 </ol>
 
 
-<!--Display the heats-->
-<h2>{{ __('Heats') }}</h2>
-<ol class="heats">
-	<li class="heat">{{ __('Loading...') }}</li>
-</ol>
 
 <!--Display the pilots-->
 <h2>{{ __('Pilots') }}</h2>
