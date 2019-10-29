@@ -51,10 +51,30 @@
 		});
 
 
-
+		
 		socket.on('heat_data', function (msg) {
-		//	$(".heats").empty();
-		//	return 0;
+		
+			//CAAR
+			//Clean class/heats sections
+			$(".caarheats").empty();
+			//rebuild class/heats sections
+			var bc = $('<div>');
+			for (var i in msg.classes ){
+				var classx = msg.classes[i];
+				if (classx.name) {
+					var nodeclass = $('<div class="panel collapsing">');
+					nodeclass.append('<div class="panel-header"> <h2>'+ classx.name + '</h2></div>');
+					var className = 'caarclassheats_' + classx.id ;   // (classx.name).replace(/[^a-zA-Z0-9]/g,'_');
+					nodeclass.append('<div class="panel-content"><div class="' + className + '"> </div></div></div>');
+					//add to tree
+					nodeclass.appendTo(bc);
+				}
+			}
+			//add to DOM
+			bc.appendTo($(".caarheats"));
+		
+			
+		
 		
 			var el_pj  = $('<ol class="heats">');
 		
@@ -104,9 +124,16 @@
 //el.appendTo($('.heats'));
 el.appendTo(el_pj);
 // Add ao classGroup do elemento
-var className = String.fromCharCode(46) + ('caarheats_' + msg.classes[i].name).replace(/[^a-zA-Z0-9]/g,'_');
+
+//var className = tring.fromCharCode(46) + 'caarclassheats_' + msg.classes[i].id;
+
+var className = String.fromCharCode(46) + 'caarclassheats_' + msg.classes[i].id;
+console.log(className);
+// ('caarheats_' + msg.classes[i].name).replace(/[^a-zA-Z0-9]/g,'_');
 //	$(className).empty();
 el_pj.appendTo($(className));
+
+
 				
 			}
 			freq.updateBlocks();
