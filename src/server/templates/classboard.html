@@ -53,7 +53,7 @@
 
 		
 		socket.on('heat_data', function (msg) {
-		
+
 			//CAAR 1 - Add classes  TESTED OK
 			//Clean class/heats sections
 			$(".caarheats").empty();
@@ -76,7 +76,7 @@
 			
            //CAAR 2 - Add content.
 		   //Inicial Seed  
-			var el_pj  = $('<ol class="heats">');
+			
         
 			for (var i in msg.heats) {
 				var heats = msg.heats[i];
@@ -121,6 +121,7 @@
 					}
 				}
 
+			var el_pj  = $('<ol class="heats">');
             //el.appendTo($('.heats'));
             el.appendTo(el_pj);
             // Add ao classGroup do elemento
@@ -240,7 +241,7 @@
 <!--Display the heats-->
 <h2>{{ __('CAAR Heats') }}</h2>
 <ol class="caarheats">
-    <!--  <li class="heat">{{ __('Loading...') }}</li>  -->
+   <li class="heats">{{ __('Loading...') }}</li>
    <!-- <div>
         <div class="panel collapsing">
             <div class="panel-header">
