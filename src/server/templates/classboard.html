@@ -54,7 +54,7 @@
 		
 		socket.on('heat_data', function (msg) {
 		
-			//CAAR
+			//CAAR 1 - Add classes  TESTED OK
 			//Clean class/heats sections
 			$(".caarheats").empty();
 			//rebuild class/heats sections
@@ -74,10 +74,10 @@
 			bc.appendTo($(".caarheats"));
 		
 			
-		
-		
+           //CAAR 2 - Add content.
+		   //Inicial Seed  
 			var el_pj  = $('<ol class="heats">');
-		
+        
 			for (var i in msg.heats) {
 				var heats = msg.heats[i];
 				var el = $('<li>');
@@ -121,17 +121,18 @@
 					}
 				}
 
-//el.appendTo($('.heats'));
-el.appendTo(el_pj);
-// Add ao classGroup do elemento
+            //el.appendTo($('.heats'));
+            el.appendTo(el_pj);
+            // Add ao classGroup do elemento
 
-//var className = tring.fromCharCode(46) + 'caarclassheats_' + msg.classes[i].id;
+            //var className = tring.fromCharCode(46) + 'caarclassheats_' + msg.classes[i].id;
 
-var className = String.fromCharCode(46) + 'caarclassheats_' + msg.classes[i].id;
-console.log(className);
-// ('caarheats_' + msg.classes[i].name).replace(/[^a-zA-Z0-9]/g,'_');
-//	$(className).empty();
-el_pj.appendTo($(className));
+            var className = String.fromCharCode(46) + 'caarclassheats_' + heats.class_id;
+            console.log(heats.heat_id +'   '  + heats.class_id);
+            //console.log(className);
+            // ('caarheats_' + msg.classes[i].name).replace(/[^a-zA-Z0-9]/g,'_');
+            //	$(className).empty();
+            el_pj.appendTo($(className));
 
 
 				
@@ -240,7 +241,7 @@ el_pj.appendTo($(className));
 <h2>{{ __('CAAR Heats') }}</h2>
 <ol class="caarheats">
     <!--  <li class="heat">{{ __('Loading...') }}</li>  -->
-    <div>
+   <!-- <div>
         <div class="panel collapsing">
             <div class="panel-header">
                 <h2>Round Q1</h2>
@@ -535,7 +536,7 @@ el_pj.appendTo($(className));
                 </div>      
             </div>
         </div>
-    </div>
+    </div> -->
 </ol>
 
 
