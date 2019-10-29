@@ -54,7 +54,7 @@
 		
 		socket.on('heat_data', function (msg) {
 
-			//CAAR 1 - Add classes  TESTED OK
+			//CAAR 1 - Add classes 
 			//Clean class/heats sections
 			$(".caarheats").empty();
 			//rebuild class/heats sections
@@ -65,7 +65,7 @@
 					var nodeclass = $('<div class="panel collapsing">');
 					nodeclass.append('<div class="panel-header"> <h2>'+ classx.name + '</h2></div>');
 					var className = 'caarclassheats_' + classx.id ;   // (classx.name).replace(/[^a-zA-Z0-9]/g,'_');
-					nodeclass.append('<div class="panel-content"><div class="' + className + '"> </div></div></div>');
+						nodeclass.append('<div class="panel-content"><div id="' + className + '"> <ol class="heats"> </ol> </div></div></div>');
 					//add to tree
 					nodeclass.appendTo(bc);
 				}
@@ -121,20 +121,10 @@
 					}
 				}
 
-			var el_pj  = $('<ol class="heats">');
-            //el.appendTo($('.heats'));
-            el.appendTo(el_pj);
-            // Add ao classGroup do elemento
-
-            //var className = tring.fromCharCode(46) + 'caarclassheats_' + msg.classes[i].id;
-
-            var className = String.fromCharCode(46) + 'caarclassheats_' + heats.class_id;
-            console.log(heats.heat_id +'   '  + heats.class_id);
-            //console.log(className);
-            // ('caarheats_' + msg.classes[i].name).replace(/[^a-zA-Z0-9]/g,'_');
-            //	$(className).empty();
-            el_pj.appendTo($(className));
-
+				//Add to DOM
+            			var className = 'caarclassheats_' + heats.class_id;
+            			console.log(heats.heat_id +'   '  + heats.class_id);
+	    			el.appendTo($( '#' + className + ' ' + String.fromCharCode(46) + 'heats' ));
 
 				
 			}
