@@ -98,6 +98,17 @@
 				el.appendTo($('.heats'));
 			}
 			freq.updateBlocks();
+			
+			//CAAR  proof of concept //
+			/*
+			heat = {'pilots': pilots,   
+		            'note': note,
+		            'heat_id': heat_id,
+		            'class_id': race_class,
+		            'locked': locked}
+			 */
+			
+			
 		});
 
 		socket.on('class_data', function (msg) {
@@ -141,6 +152,46 @@
 			} else {
 				$('.race_classes').append('<p class="form-note">' + __('This is a single-class event.') + '</p>');
 			}
+			
+			//CAAR  proof of concept //
+			//Save class info into array
+			
+			/*Class API		
+	        current_class = {}
+	        current_class['id'] = race_class.id
+	        current_class['©'] = race_class.name
+	        current_class['description'] = race_class.description
+	        current_class['format'] = race_class.format_id
+	        current_class['locked'] = True/False
+	        */
+	        
+	        
+	        $(".caarheats").empty();
+			
+	        if (msg.classes.length) {
+	        	for (var i in msg.classes) {
+	        		var race_class = msg.classes[i];
+					var el = $('<div class="panel collapsing"> 				\
+								<div class="panel-header">   				\
+									<h2>' + race_class.name + '</h2>        \
+								</div> 										\
+									<div class="panel-content">">			\
+										<h3>LeaderBoard</h3>				\
+									</div>									\
+								</div>');
+					
+					
+					el.appendTo('.caarheats');
+	        	}
+	        	
+	        } else {
+	        	$('.caarheats').append('<p class="form-note">' + __('This is a single-class event.') + '</p>');
+	        }
+	        
+	        
+			 
+	        
+	        
 		});
 
 	});
@@ -153,6 +204,14 @@
 <div id="race_classes" class="race_classes">
 	<p class="form-note">{{ __('Loading...') }}</p>
 </div>
+
+
+<!--Display the heats-->
+<h2>{{ __('CAAR Heats') }}</h2>
+<ol class="caarheats">
+	<li class="heat">{{ __('Loading...') }}</li>
+</ol>
+
 
 <!--Display the heats-->
 <h2>{{ __('Heats') }}</h2>
