@@ -50,14 +50,20 @@
 			}
 		});
 
-		socket.on('heat_data', function (msg) {
 
-			//CAAR 1 - Add classes
-			$("#caarheats").empty();
-			var bc = $('<div>');
-			for (var i in msg.classes ){
-			var c = msg.classes[i];
-				if (c.name) {
+
+
+		socket.on('heat_data', function (msg) {
+		
+		function add_class( c ) { //receives current class
+			
+			
+			
+		///	if (c.name == null){
+		//		c.name = 'undefined';
+		//	}
+		
+			if (c.name) {
 					var nodeclass = $('<div class="panel collapsing">');
 					nodeclass.append('<div class="panel-header"> <h2>'+ c.name + '</h2></div>');
 					var groupName = 'caarclassheats_' + c.id ;
@@ -66,13 +72,35 @@
 					nodeclass.appendTo(bc);
 				}
 			}
-			//add to DOM
+
+			//CAAR 1 - Add classes
+			$("#caarheats").empty();
+			var bc = $('<div>');
+			for (var i in msg.classes ){
+			var c = msg.classes[i];
+			    console.log( "Found class: heat_id " +  c.name +   "class_id "+  c.id );
+			
+				if (c.name) {
+					add_class( c )
+			//		var nodeclass = $('<div class="panel collapsing">');
+			//		nodeclass.append('<div class="panel-header"> <h2>'+ c.name + '</h2></div>');
+			//		var groupName = 'caarclassheats_' + c.id ;
+			//		nodeclass.append('<div class="panel-content"><div id="' + groupName + '"> <ol class="heats"> </ol> </div></div></div>');
+			//		//add to tree
+			//		nodeclass.appendTo(bc);
+				}
+			}
+			//add to DOM	
 			bc.appendTo($("#caarheats"));
 
 			//add content
 			for (var i in msg.heats) {
 				var heats = msg.heats[i];
 				var el = $('<li>');
+				if(heats.locked) {
+					el = $('<li style="background-color:lightblue">');
+					}
+				
 				if (heats.note) {
 					el.append('<h3>' + heats.note + '</h3>');
 				} else {
@@ -111,6 +139,11 @@
 					} else {
 						el.append('<div class="race_class">Unclassified</div>');
 					}
+				}
+				
+				if (heats.locked) {
+					console.log( "locked ; heat_id "+ heats.heat_id +", heat_note " + heats.note + ", class_id " + heats.class_id );  // nodeName
+				    //el.firstElementChild.style.backgroundColor = "Red";
 				}
 				el.appendTo($( '#' + ('caarclassheats_' + heats.class_id) + ' ' + String.fromCharCode(46) + 'heats' ));
 			}
