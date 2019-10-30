@@ -53,21 +53,21 @@
 		socket.on('heat_data', function (msg) {
 
 			//CAAR 1 - Add classes
-			$(".caarheats").empty();
+			$("#caarheats").empty();
 			var bc = $('<div>');
 			for (var i in msg.classes ){
-				var classx = msg.classes[i];
-				if (classx.name) {
+			var c = msg.classes[i];
+				if (c.name) {
 					var nodeclass = $('<div class="panel collapsing">');
-					nodeclass.append('<div class="panel-header"> <h2>'+ classx.name + '</h2></div>');
-					var className = 'caarclassheats_' + classx.id ;   // (classx.name).replace(/[^a-zA-Z0-9]/g,'_');
-						nodeclass.append('<div class="panel-content"><div id="' + className + '"> <ol class="heats"> </ol> </div></div></div>');
+					nodeclass.append('<div class="panel-header"> <h2>'+ c.name + '</h2></div>');
+					var groupName = 'caarclassheats_' + c.id ;
+					nodeclass.append('<div class="panel-content"><div id="' + groupName + '"> <ol class="heats"> </ol> </div></div></div>');
 					//add to tree
 					nodeclass.appendTo(bc);
 				}
 			}
 			//add to DOM
-			bc.appendTo($(".caarheats"));
+			bc.appendTo($("#caarheats"));
 
 			//add content
 			for (var i in msg.heats) {
@@ -112,12 +112,7 @@
 						el.append('<div class="race_class">Unclassified</div>');
 					}
 				}
-
-				//add to DOM
-				var className = 'caarclassheats_' + heats.class_id;
-				console.log(heats.heat_id +'   '  + heats.class_id);
-				el.appendTo($( '#' + className + ' ' + String.fromCharCode(46) + 'heats' ));
-
+				el.appendTo($( '#' + ('caarclassheats_' + heats.class_id) + ' ' + String.fromCharCode(46) + 'heats' ));
 			}
 			freq.updateBlocks();
 		});
@@ -179,8 +174,8 @@
 
 <!--Display the heats-->
 <h2>{{ __('CAAR Heats') }}</h2>
-<ol class="caarheats">
-   <li class="heats">{{ __('Loading...') }}</li>
+<ol id="caarheats">
+	<li class="heats">{{ __('Loading...') }}</li>
 </ol>
 
 
