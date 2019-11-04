@@ -347,23 +347,6 @@ input:checked + .slider:before {
 
 <!--Display the heats-->
 <h2>{{ __('CAAR Heats') }}</h2>
-<div>
-	<span STYLE="white-space: nowrap;">
-		<strong>Toggle groups</strong>
-		<label class="switch">
-			<input type="checkbox" checked id="checkbox_heat_groups" onclick='exec_checkbox("checkbox_heat_groups");'/>
-			<span class="slider round"/>
-		</label>
-	</span>
-	
-	<span STYLE="white-space: nowrap;">
-		<strong>Toggle Show locked</strong>
-		<label class="switch">
-			<input type="checkbox" id="checkbox_show_locked" onclick='exec_checkbox("checkbox_show_locked");'/>
-			<span class="slider round"/>
-		</label>
-	</span>
-</div>
 <ol id="caarheats">
 	<li class="heats">{{ __('Loading...') }}</li>
 </ol>
@@ -374,6 +357,29 @@ input:checked + .slider:before {
 <ul class="pilots">
 	<li>{{ __('Loading...') }}</li>
 </ul>
+
+
+<!--Page Control-->
+<div class="row">
+   </br>
+   </br>
+</div>
+
+<hr width="100%">
+
+
+<ol class="form">
+			<li>
+				<div class="label-block">
+					{{ __('Configurations') }}
+				</div>
+				<ul>
+					<li><label><input type="checkbox" id="checkbox_heat_groups" onclick='exec_checkbox("checkbox_heat_groups");'> {{ __('Group heats') }}</label></li>
+					<li><label><input type="checkbox" id="checkbox_show_locked" onclick='exec_checkbox("checkbox_show_locked");'> {{ __('Show Locked') }}</label></li>
+				</ul>
+			</li>
+		</ol>
+
 
 </main>
 {% endblock %}
