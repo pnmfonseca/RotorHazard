@@ -1,5 +1,53 @@
 {% extends "layout.html" %} {% block title %}Heats{% endblock %} {% block head %} {% endblock %} {% block content %}
 <script type="text/javascript" charset="utf-8">
+
+	//CAAR Ini
+	function setCookie(cname, cvalue, exdays) {
+	  var d = new Date();
+	  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+	  var expires = "expires="+d.toUTCString();
+	  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+	}
+
+	function getCookie(cname) {
+	  var name = cname + "=";
+	  var ca = document.cookie.split(';');
+	  for(var i = 0; i < ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == ' ') {
+		  c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+		  return c.substring(name.length, c.length);
+		}
+	  }
+	  return "";
+	}
+
+	function checkCookie() {
+	  var user = getCookie("username");
+	  if (user != "") {
+		alert("Welcome again " + user);
+	  } else {
+		user = prompt("Please enter your name:", "");
+		if (user != "" && user != null) {
+		  setCookie("username", user, 365);
+		}
+	  }
+	}
+
+	////////////////////////
+	
+	function exec_checkbox( cid ) {
+		//save value
+		var cvalue = ( $("#"+cid).prop('checked')?"checked":"unchecked");
+		console.log(cid + "  " + cvalue);
+		setCookie(cid, cvalue, 1 ) 
+		return 0;
+	}
+    //CAAR end
+
+
 	$(document).ready(function () {
 		socket.emit('load_data', {'load_types': [
 			'all_languages',
@@ -9,6 +57,27 @@
 			'heat_data',
 			'pilot_data'
 		]});
+
+
+
+		//CAAR pull saved values
+		var lst_checkboxes = ["checkbox_heat_groups","checkbox_show_locked"];
+		for(i in lst_checkboxes){
+			var strid = getCookie(lst_checkboxes[i] );
+			if(strid) {
+				switch (strid) {
+					case 'checked':
+						$("#"+lst_checkboxes[i]).prop("checked", true);
+						break;
+					case 'unchecked':
+						$("#"+lst_checkboxes[i]).prop("checked", false);
+					default:
+						console.log('Sorry, we are out of ' + strid + '.');
+				}
+			}
+		}//for
+
+
 
 		socket.on('all_languages', function (msg) {
 			rotorhazard.language_strings = msg.languages;
@@ -275,12 +344,12 @@ input:checked + .slider:before {
 <div>
 	<strong>Toggle groups</strong>
 	<label class="switch">
-		<input type="checkbox" checked id="checkbox_heat_groups">
+		<input type="checkbox" checked id="checkbox_heat_groups" onclick='exec_checkbox("checkbox_heat_groups");'/>
 		<span class="slider round"/>
 	</label>
 	<strong>Toggle Show locked</strong>
 	<label class="switch">
-		<input type="checkbox" id="checkbox_show_locked">
+		<input type="checkbox" id="checkbox_show_locked" onclick='exec_checkbox("checkbox_show_locked");'/>
 		<span class="slider round"/>
 	</label>
 </div>
