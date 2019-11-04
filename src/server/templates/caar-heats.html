@@ -60,6 +60,7 @@
 
 
 
+
 		//CAAR pull saved values
 		var lst_checkboxes = ["checkbox_heat_groups","checkbox_show_locked"];
 		for(i in lst_checkboxes){
@@ -123,45 +124,35 @@
 
 
 
+
+
+
 		socket.on('heat_data', function (msg) {
-		
-		console.log( "HELLO  " + $('#checkbox_heat_groups').prop('checked'));
-
-		
-		function add_class( c ) { //receives current class
-			
-			
-			
-		///	if (c.name == null){
-		//		c.name = 'undefined';
-		//	}
-		
-			if (c.name) {
-					var nodeclass = $('<div class="panel collapsing">');
-					nodeclass.append('<div class="panel-header"> <h2>'+ c.name + '</h2></div>');
-					var groupName = 'caarclassheats_' + c.id ;
-					nodeclass.append('<div class="panel-content"><div id="' + groupName + '"> <ol class="heats"> </ol> </div></div></div>');
-					//add to tree
-					nodeclass.appendTo(bc);
+			//CAAR
+			function add_class( c ) { 
+				if (c.name) {
+					var groupName = 'caarclassheats_' + c.id;
+					var idpanel = 'caar-heats_' + groupName;
+					
+					$(bc).append ( $('<div class="panel collapsing open" id="caar-heats_caarclassheats_'+ c.id +'">  ' + 
+								  '	<div class="panel-header">				                        ' +
+								  '			<h2>'+c.name+'</h2>                             ' +
+								  '  </div>                                                         ' +
+								  '  	<div class="panel-content" id="caarclassheats_'+ c.id+'">   ' +
+								  '  		<ol class="heats"> </ol>                                ' +
+								  '  	</div>														' +
+								  '  </div>' 
+								  )
+								);		
+					}
 				}
-			}
-
-			//CAAR 1 - Add classes
+				
+			//Add classes
 			$("#caarheats").empty();
 			var bc = $('<div>');
 			for (var i in msg.classes ){
-			var c = msg.classes[i];
-			    console.log( "Found class: heat_id " +  c.name +   "class_id "+  c.id );
-			
-				if (c.name) {
-					add_class( c )
-			//		var nodeclass = $('<div class="panel collapsing">');
-			//		nodeclass.append('<div class="panel-header"> <h2>'+ c.name + '</h2></div>');
-			//		var groupName = 'caarclassheats_' + c.id ;
-			//		nodeclass.append('<div class="panel-content"><div id="' + groupName + '"> <ol class="heats"> </ol> </div></div></div>');
-			//		//add to tree
-			//		nodeclass.appendTo(bc);
-				}
+				var c = msg.classes[i];
+				if (c.name) add_class( c )
 			}
 			//add to DOM	
 			bc.appendTo($("#caarheats"));
@@ -215,12 +206,26 @@
 				}
 				
 				if (heats.locked) {
-					console.log( "locked ; heat_id "+ heats.heat_id +", heat_note " + heats.note + ", class_id " + heats.class_id );  // nodeName
+					//console.log( "locked ; heat_id "+ heats.heat_id +", heat_note " + heats.note + ", class_id " + heats.class_id );  // nodeName
 				    //el.firstElementChild.style.backgroundColor = "Red";
 				}
 				el.appendTo($( '#' + ('caarclassheats_' + heats.class_id) + ' ' + String.fromCharCode(46) + 'heats' ));
 			}
 			freq.updateBlocks();
+			
+			//CAAR
+			if ($('.collapsing').length) {
+					$('.collapsing').each(function(){
+						var el = $(this)
+						
+						var v_id = el.attr('id');
+						
+						if (rotorhazard.panelstates[v_id] == null || rotorhazard.panelstates[v_id] )
+							el.find('.panel-content').show();
+						else
+						   el.find('.panel-content').hide();
+					});
+			}
 		});
 
 		socket.on('class_data', function (msg) {
@@ -343,16 +348,21 @@ input:checked + .slider:before {
 <!--Display the heats-->
 <h2>{{ __('CAAR Heats') }}</h2>
 <div>
-	<strong>Toggle groups</strong>
-	<label class="switch">
-		<input type="checkbox" checked id="checkbox_heat_groups" onclick='exec_checkbox("checkbox_heat_groups");'/>
-		<span class="slider round"/>
-	</label>
-	<strong>Toggle Show locked</strong>
-	<label class="switch">
-		<input type="checkbox" id="checkbox_show_locked" onclick='exec_checkbox("checkbox_show_locked");'/>
-		<span class="slider round"/>
-	</label>
+	<span STYLE="white-space: nowrap;">
+		<strong>Toggle groups</strong>
+		<label class="switch">
+			<input type="checkbox" checked id="checkbox_heat_groups" onclick='exec_checkbox("checkbox_heat_groups");'/>
+			<span class="slider round"/>
+		</label>
+	</span>
+	
+	<span STYLE="white-space: nowrap;">
+		<strong>Toggle Show locked</strong>
+		<label class="switch">
+			<input type="checkbox" id="checkbox_show_locked" onclick='exec_checkbox("checkbox_show_locked");'/>
+			<span class="slider round"/>
+		</label>
+	</span>
 </div>
 <ol id="caarheats">
 	<li class="heats">{{ __('Loading...') }}</li>
