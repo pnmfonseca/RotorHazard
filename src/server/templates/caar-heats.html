@@ -49,7 +49,7 @@
 		if( cid == "checkbox_show_locked" )
 			refresh_heat_blocks_style();
 
-		if( cid == checkbox_heat_groups ) 
+		if( cid == "checkbox_heat_groups" ) 
 			rebuild_heats_block();	
 		return 0;
 	}
@@ -70,86 +70,8 @@
 	}
 	
 	
-    //CAAR end
-
-
-	$(document).ready(function () {
-		socket.emit('load_data', {'load_types': [
-			'all_languages',
-			'language',
-			'frequency_data',
-			'class_data',
-			'heat_data',
-			'pilot_data'
-		]});
-
-
-
-
-		//CAAR pull saved values from cookies
-		var lst_checkboxes = ["checkbox_heat_groups","checkbox_show_locked"];
-		for(i in lst_checkboxes){
-			var strid = getCookie(lst_checkboxes[i] );
-			if(strid) {
-				switch (strid) {
-					case 'checked':
-						$("#"+lst_checkboxes[i]).prop("checked", true);
-						break;
-					case 'unchecked':
-						$("#"+lst_checkboxes[i]).prop("checked", false);
-						break;
-					default:
-						console.log('Sorry, we are out of ' + strid + '.');
-				}
-			}
-		}//for
-
-
-
-		socket.on('all_languages', function (msg) {
-			rotorhazard.language_strings = msg.languages;
-		});
-
-		socket.on('language', function (msg) {
-			if (msg.language) {
-				rotorhazard.interface_language = msg.language;
-			}
-		});
-
-		socket.on('frequency_data', function (msg) {
-			for (var i in msg.frequency) {
-				if (typeof(rotorhazard.nodes[i]) === 'undefined') {
-					rotorhazard.nodes[i] = new nodeModel();
-				}
-				rotorhazard.nodes[i].frequency = msg.frequency[i];
-				freq.updateBlocks();
-			}
-		});
-
-		socket.on('pilot_data', function (msg) {
-			msg.pilots.sort(function(a, b){
-				if (a.name < b.name)
-					return -1;
-				if (a.name > b.name)
-					return 1;
-				return 0;
-			});
-
-			$(".pilots").empty();
-			for (var i in msg.pilots) {
-				if (msg.pilots[i]) {
-					var el = $('<li data-id="' + msg.pilots[i].pilot_id + '">');
-					el.append('<div class="name">'+ msg.pilots[i].name + '</div>');
-					el.append('<div class="callsign">' + msg.pilots[i].callsign + '</div>');
-					el.appendTo($('.pilots'));
-				}
-			}
-		});
-
-
-// CAAR  ini
-
-		function rebuild_heats_block () {
+	
+	function rebuild_heats_block () {
 			var group_heats = $("#checkbox_heat_groups").prop('checked');
 			if(group_heats)
 			     build_group_heats_block();
@@ -164,6 +86,7 @@
 			if(!Gmsg) return 0;
 			var msg = Gmsg;
 		 //socket.on('heat_data', function (msg) {
+			$("#caarheats").empty();
 			$(".heats").empty();
 			for (var i in msg.heats) {
 				var heats = msg.heats[i];
@@ -213,15 +136,10 @@
 					}
 				}
 
-				el.appendTo($('.heats'));
+				el.appendTo($('#caarheats'));
 			}
 			freq.updateBlocks();
 		};
-
-		socket.on('heat_data', function (msg) {
-			Gmsg = msg; //fail to add info to Browser
-			rebuild_heats_block ();
-			});
 
 
 		function build_group_heats_block() {
@@ -328,6 +246,86 @@
 			// Refresh blocks atributes
 			refresh_heat_blocks_style();
 		};
+
+
+    //CAAR end
+
+
+	$(document).ready(function () {
+		socket.emit('load_data', {'load_types': [
+			'all_languages',
+			'language',
+			'frequency_data',
+			'class_data',
+			'heat_data',
+			'pilot_data'
+		]});
+
+
+		//CAAR pull saved values from cookies
+		var lst_checkboxes = ["checkbox_heat_groups","checkbox_show_locked"];
+		for(i in lst_checkboxes){
+			var strid = getCookie(lst_checkboxes[i] );
+			if(strid) {
+				switch (strid) {
+					case 'checked':
+						$("#"+lst_checkboxes[i]).prop("checked", true);
+						break;
+					case 'unchecked':
+						$("#"+lst_checkboxes[i]).prop("checked", false);
+						break;
+					default:
+						console.log('Sorry, we are out of ' + strid + '.');
+				}
+			}
+		}//for
+
+
+		socket.on('all_languages', function (msg) {
+			rotorhazard.language_strings = msg.languages;
+		});
+
+		socket.on('language', function (msg) {
+			if (msg.language) {
+				rotorhazard.interface_language = msg.language;
+			}
+		});
+
+		socket.on('frequency_data', function (msg) {
+			for (var i in msg.frequency) {
+				if (typeof(rotorhazard.nodes[i]) === 'undefined') {
+					rotorhazard.nodes[i] = new nodeModel();
+				}
+				rotorhazard.nodes[i].frequency = msg.frequency[i];
+				freq.updateBlocks();
+			}
+		});
+
+		socket.on('pilot_data', function (msg) {
+			msg.pilots.sort(function(a, b){
+				if (a.name < b.name)
+					return -1;
+				if (a.name > b.name)
+					return 1;
+				return 0;
+			});
+
+			$(".pilots").empty();
+			for (var i in msg.pilots) {
+				if (msg.pilots[i]) {
+					var el = $('<li data-id="' + msg.pilots[i].pilot_id + '">');
+					el.append('<div class="name">'+ msg.pilots[i].name + '</div>');
+					el.append('<div class="callsign">' + msg.pilots[i].callsign + '</div>');
+					el.appendTo($('.pilots'));
+				}
+			}
+		});
+
+		// CAAR  ini
+		socket.on('heat_data', function (msg) {
+			Gmsg = msg;
+			rebuild_heats_block ();
+			});
 
 		socket.on('class_data', function (msg) {
 			$(".race_classes").empty();
