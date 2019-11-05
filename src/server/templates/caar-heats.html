@@ -2,6 +2,8 @@
 <script type="text/javascript" charset="utf-8">
 
 	//CAAR Ini
+	var Gmsg;   // Global structure for heats data.
+	
 	function setCookie(cname, cvalue, exdays) {
 	  var d = new Date();
 	  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -43,8 +45,29 @@
 		var cvalue = ( $("#"+cid).prop('checked')?"checked":"unchecked");
 		console.log(cid + "  " + cvalue);
 		setCookie(cid, cvalue, 1 ) 
+		
+		if( cid == "checkbox_show_locked" )
+			refresh_heat_blocks();
+
 		return 0;
 	}
+	
+	function refresh_heat_blocks(){
+	  if( Gmsg ) {
+		$('.heat_block').each(function(){
+				var heat_ipos = $(this).attr('heat_ipos');
+				var heats = Gmsg.heats[heat_ipos];
+				
+				if(heats.locked && ($("#checkbox_show_locked").prop('checked'))) 
+					$(this).prop("style")["background"] = 'lightblue';
+				else 
+					$(this).prop("style")["background"] = null;
+			}
+		)
+		};
+	}
+	
+	
     //CAAR end
 
 
@@ -128,6 +151,8 @@
 
 
 		socket.on('heat_data', function (msg) {
+			Gmsg = msg;
+		
 			//CAAR
 			function add_class( c ) { 
 				if (c.name) {
@@ -160,10 +185,7 @@
 			//add content
 			for (var i in msg.heats) {
 				var heats = msg.heats[i];
-				var el = $('<li>');
-				if(heats.locked) {
-					el = $('<li style="background-color:lightblue">');
-					}
+				var el = $('<li class="heat_block" heat_ipos="' + i + '">');
 				
 				if (heats.note) {
 					el.append('<h3>' + heats.note + '</h3>');
@@ -226,6 +248,8 @@
 						   el.find('.panel-content').hide();
 					});
 			}
+			// Refresh blocks atributes
+			refresh_heat_blocks();
 		});
 
 		socket.on('class_data', function (msg) {
