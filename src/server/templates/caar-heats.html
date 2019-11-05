@@ -47,12 +47,14 @@
 		setCookie(cid, cvalue, 1 ) 
 		
 		if( cid == "checkbox_show_locked" )
-			refresh_heat_blocks();
+			refresh_heat_blocks_style();
 
+		if( cid == checkbox_heat_groups ) 
+			rebuild_heats_block();	
 		return 0;
 	}
 	
-	function refresh_heat_blocks(){
+	function refresh_heat_blocks_style(){
 	  if( Gmsg ) {
 		$('.heat_block').each(function(){
 				var heat_ipos = $(this).attr('heat_ipos');
@@ -84,7 +86,7 @@
 
 
 
-		//CAAR pull saved values
+		//CAAR pull saved values from cookies
 		var lst_checkboxes = ["checkbox_heat_groups","checkbox_show_locked"];
 		for(i in lst_checkboxes){
 			var strid = getCookie(lst_checkboxes[i] );
@@ -145,13 +147,88 @@
 		});
 
 
+// CAAR  ini
 
+		function rebuild_heats_block () {
+			var group_heats = $("#checkbox_heat_groups").prop('checked');
+			if(group_heats)
+			     build_group_heats_block();
+			else
+			     build_old_heats_block(); 
+		
+			// Refresh heat blocks style
+			refresh_heat_blocks_style();
+		}
 
+		function build_old_heats_block () {
+			if(!Gmsg) return 0;
+			var msg = Gmsg;
+		 //socket.on('heat_data', function (msg) {
+			$(".heats").empty();
+			for (var i in msg.heats) {
+				var heats = msg.heats[i];
+				var el = $('<li class="heat_block" heat_ipos="' + i + '">');
 
+			//	if(heats.locked) {
+			//		el = $('<li style="background-color:lightblue">');
+			//		}
 
+				if (heats.note) {
+					el.append('<h3>' + heats.note + '</h3>');
+				} else {
+					el.append('<h3>'+ __('Heat') + ' ' + heats.heat_id + '</h3>');
+				}
+
+				var nodelist = $('<ol>');
+				var callsign;
+				for (j in heats.pilots) {
+					var heatpilot = heats.pilots[j];
+					var slot = $('<li>');
+					slot.append('<div class="channel-block" data-node="' + j + '"><span class="ch"></span> <span class="fr"></span></div>');
+
+					callsign = __('-None-');
+					for (var k in msg.pilot_data) {
+						if (msg.pilot_data[k].pilot_id == heatpilot) {
+							callsign = msg.pilot_data[k].callsign;
+							break;
+						}
+					}
+
+					slot.append('<div class="pilot-name">' + callsign + '</div');
+					nodelist.append(slot);
+				}
+				el.append(nodelist);
+
+				// class indicator
+				if (msg.classes.length) {
+					if (heats.class_id) {
+						for (var i in msg.classes) {
+							if (msg.classes[i].id == heats.class_id) {
+								el.append('<div class="race_class">' + msg.classes[i].name + '</div>')
+								break;
+							}
+						}
+					} else {
+						el.append('<div class="race_class">Unclassified</div>');
+					}
+				}
+
+				el.appendTo($('.heats'));
+			}
+			freq.updateBlocks();
+		};
 
 		socket.on('heat_data', function (msg) {
-			Gmsg = msg;
+			Gmsg = msg; //fail to add info to Browser
+			rebuild_heats_block ();
+			});
+
+
+		function build_group_heats_block() {
+			if(!Gmsg) return 0;
+			var msg = Gmsg;
+	//	socket.on('heat_data', function (msg) {
+	//		Gmsg = msg;
 		
 			//CAAR
 			function add_class( c ) { 
@@ -249,8 +326,8 @@
 					});
 			}
 			// Refresh blocks atributes
-			refresh_heat_blocks();
-		});
+			refresh_heat_blocks_style();
+		};
 
 		socket.on('class_data', function (msg) {
 			$(".race_classes").empty();
