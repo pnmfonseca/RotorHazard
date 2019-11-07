@@ -142,42 +142,50 @@
 		};
 
 
+
+		function add_class( c_id, c_name, target ) { 
+				$(target).append ( $('<div class="panel collapsing open" id="caar-heats_caarclassheats_'+ c_id +'">  ' + 
+							  '	<div class="panel-header">				                        ' +
+							  '			<h2>'+c_name+'</h2>                             		' +
+							  '  </div>                                                         ' +
+							  '  	<div class="panel-content" id="caarclassheats_'+ c_id+'">   ' +
+							  '  		<ol class="heats"> </ol>                                ' +
+							  '  	</div>														' +
+							  '  </div>' 
+							  )
+							);		
+			}
+			
+
+
 		function build_group_heats_block() {
 			if(!Gmsg) return 0;
 			var msg = Gmsg;
-	//	socket.on('heat_data', function (msg) {
-	//		Gmsg = msg;
-		
-			//CAAR
-			function add_class( c ) { 
-				if (c.name) {
-					var groupName = 'caarclassheats_' + c.id;
-					var idpanel = 'caar-heats_' + groupName;
-					
-					$(bc).append ( $('<div class="panel collapsing open" id="caar-heats_caarclassheats_'+ c.id +'">  ' + 
-								  '	<div class="panel-header">				                        ' +
-								  '			<h2>'+c.name+'</h2>                             ' +
-								  '  </div>                                                         ' +
-								  '  	<div class="panel-content" id="caarclassheats_'+ c.id+'">   ' +
-								  '  		<ol class="heats"> </ol>                                ' +
-								  '  	</div>														' +
-								  '  </div>' 
-								  )
-								);		
-					}
-				}
-				
-			//Add classes
+			
+			//Add groups / classes
 			$("#caarheats").empty();
 			var bc = $('<div>');
 			for (var i in msg.classes ){
 				var c = msg.classes[i];
-				if (c.name) add_class( c )
+				//Do not add group if no heats
+				for (var j in msg.heats) 
+					if (msg.heats[j].class_id == c.id) {
+						//If exists, add group and exit
+						add_class(c.id, c.name, bc);
+						break;
+					}
 			}
-			//add to DOM	
+			//Test if exists Unclassified heats
+			for (var i in msg.heats) 
+				if ( msg.heats[i].class_id == 0 ) {
+					var heats = msg.heats[i];
+					add_class(heats.class_id, 'Unclassified', bc);
+					break;
+				}
+			//Add to DOM
 			bc.appendTo($("#caarheats"));
 
-			//add content
+			//Add content
 			for (var i in msg.heats) {
 				var heats = msg.heats[i];
 				var el = $('<li class="heat_block" heat_ipos="' + i + '">');
@@ -221,16 +229,11 @@
 						el.append('<div class="race_class">Unclassified</div>');
 					}
 				}
-				
-				if (heats.locked) {
-					//console.log( "locked ; heat_id "+ heats.heat_id +", heat_note " + heats.note + ", class_id " + heats.class_id );  // nodeName
-				    //el.firstElementChild.style.backgroundColor = "Red";
-				}
 				el.appendTo($( '#' + ('caarclassheats_' + heats.class_id) + ' ' + String.fromCharCode(46) + 'heats' ));
 			}
 			freq.updateBlocks();
 			
-			//CAAR
+			//Enforce collapsing panels
 			if ($('.collapsing').length) {
 					$('.collapsing').each(function(){
 						var el = $(this)
@@ -246,10 +249,7 @@
 			// Refresh blocks atributes
 			refresh_heat_blocks_style();
 		};
-
-
     //CAAR end
-
 
 	$(document).ready(function () {
 		socket.emit('load_data', {'load_types': [
