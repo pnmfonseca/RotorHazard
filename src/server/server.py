@@ -613,13 +613,6 @@ def heats():
     '''Route to heat summary page.'''
     return render_template('heats.html', serverInfo=serverInfo, getOption=getOption, __=__)
 
-@APP.route('/caar-heats')
-def caarheats():
-    '''Route to heat summary page.'''
-    return render_template('caar-heats.html', serverInfo=serverInfo, getOption=getOption, __=__)
-
-
-
 @APP.route('/results')
 def results():
     '''Route to round summary page.'''
@@ -716,6 +709,12 @@ class AlchemyEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 ### CAAR routes ###
+
+@APP.route('/caar-heats')
+def caarheats():
+    '''Route to heat summary page.'''
+    return render_template('caar-heats.html', serverInfo=serverInfo, getOption=getOption, __=__)
+
 @APP.route('/leaderboard', methods=[ 'GET'])
 def leaderboardGET():
 
