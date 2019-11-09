@@ -35,7 +35,22 @@ Entities
 
 
 * Basic Sports Club branding, visual adjustments only
-* WIP
+* API routes
+    * /api/caar/leaderboard
+        * accepts json data that summarize the current event's Leaderboard in a familiar format
+    * /api/caar/pilot/populate
+        * Creates RH Pilots as per the list of participants. 
+    * /api/caar/pilot/name/<pPilotName>
+        * Looks up pilots by their name
+    * api/caar/pilot/callsign/<pPilotCallsign>
+        * Looks up pilots by their callsign
+    * /api/caar/event/qualifiers/setup
+        * Creates Classes and Heats
+* + Menu entry to display a Leaderboard in a custom format
+* + Settings/Database
+    * Added an option to fully reset the RH database (Races, Heats, Classes, and Pilots -- Full Reset)
+* + Prevent running Heats when their Class is *Unassigned*
+* + New Heats page
 
 
 ## Contributors
