@@ -845,19 +845,6 @@ def api_pilot_callsign(pPilotCallsign):
 
     return json.dumps({"pilot": pilot}, cls=AlchemyEncoder), 200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
 
-@APP.route("/api/caar/class/create", methods=["POST"])
-@requires_auth
-def api_create_class():
-    pass
-    return Response(response='Create Class is WIP!\n', status=200)
-
-@APP.route("/api/caar/heat/create", methods=["POST"])
-def api_create_heat():
-    print ">>> api_create_heat"
-    #SOCKET_IO.emit('add_heat')
-    on_add_heat_caar(1,"teste")
-    return Response(response='WORK IN PROGRESS!\n', status=200)
-
 @APP.route("/api/caar/event/qualifiers/setup", methods=["POST"])
 @requires_auth
 def api_setup_qualifiers_caar():

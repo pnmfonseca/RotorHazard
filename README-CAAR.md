@@ -32,6 +32,8 @@ Entities
 
 
 ## Changes/additions from the upstream Rotorhazard
+
+
 * Basic Sports Club branding, visual adjustments only
 * WIP
 
