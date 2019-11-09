@@ -1,3 +1,5 @@
+# [*Please check the README for this fork!*](README-CAAR.md)
+
 ![RotorHazard Logo](/src/server/static/image/RotorHazard%20Logo.svg)
 
 # RotorHazard
