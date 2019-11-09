@@ -1,4 +1,4 @@
-![CAAR Logo](/src/server/static/image/CAARLogo.png)
+![CAAR Logo](/src/server/static/image/CAARLogo.jpg)
 
 # RotorHazard -> CAAR Adoption
 This project evolves over the impressive work from the upstream project. As part of our flight club's adoption (CAAR, Portugal), we are integrating Rotorhazard into the the existing Scoring rules and control system (and not the other way around).
