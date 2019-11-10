@@ -1379,27 +1379,6 @@ def on_add_heat():
     server_log('Heat added: Heat {0}'.format(max_heat_id+1))
     emit_heat_data() # Settings page, new pilot position in heats
 
-def on_add_heat_caar(pPilotID, pNote):
-    '''Adds a Heat from CAAR's API client.'''
-    max_heat_id = DB.session.query(DB.func.max(Heat.heat_id)).scalar()
-    for node in range(RACE.num_nodes): # Add next heat with pilots 1 thru 5
-        # id = DB.Column(DB.Integer, primary_key=True)
-        # heat_id = DB.Column(DB.Integer, nullable=False)
-        # node_index = DB.Column(DB.Integer, nullable=False)
-        # pilot_id = DB.Column(DB.Integer, nullable=False)
-        # note = DB.Column(DB.String(80), nullable=True)
-        # class_id = DB.Column(DB.Integer, nullable=False)
-        heat =  Heat(heat_id=max_heat_id+1, 
-                node_index=node, 
-                pilot_id=pPilotID,
-                note=pNote, 
-                class_id=CLASS_ID_NONE)
-        DB.session.add(heat)
-
-    DB.session.commit()
-    server_log('CAAR Heat added: Heat {0}'.format(max_heat_id+1))
-    emit_heat_data() # Settings page, new pilot position in heats
-
 @SOCKET_IO.on('alter_heat')
 def on_alter_heat(data):
     '''Update heat.'''
