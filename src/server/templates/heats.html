@@ -55,11 +55,6 @@
 			for (var i in msg.heats) {
 				var heats = msg.heats[i];
 				var el = $('<li>');
-
-				if(heats.locked) {
-					el = $('<li style="background-color:lightblue">');
-					}
-
 				if (heats.note) {
 					el.append('<h3>' + heats.note + '</h3>');
 				} else {
