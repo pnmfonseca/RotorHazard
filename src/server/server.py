@@ -799,7 +799,7 @@ def populate_pilots():
         pilots_data={}
         
         for pilot in data.get("pilots"):
-            server_log("Adding pilot {0} ({1})".format(pilot["name"], pilot["callsign"]))
+            server_log("Adding pilot {0} ({1})".format(pilot["name"].encode('utf-8'), pilot["callsign"].encode('utf-8')))
 
             '''Adds the next available pilot id number in the database.'''
             new_pilot = Pilot(name=pilot["name"],
