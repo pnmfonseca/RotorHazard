@@ -46,11 +46,11 @@ Entities
         * Looks up pilots by their callsign
     * /api/caar/event/qualifiers/setup
         * Creates Classes and Heats
-* + Menu entry to display a Leaderboard in a custom format
-* + Settings/Database
+* Added, Menu entry to display a Leaderboard in a custom format
+* Added, Settings/Database
     * Added an option to fully reset the RH database (Races, Heats, Classes, and Pilots -- Full Reset)
-* + Prevent running Heats when their Class is *Unassigned*
-* + New Heats page
+* Added, Prevent running Heats when their Class is *Unassigned*
+* Added, New Heats page, that groups heats per Round and optionally colorizes the completed ones.
 
 
 ## Contributors
