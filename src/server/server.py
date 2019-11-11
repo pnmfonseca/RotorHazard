@@ -845,7 +845,7 @@ def api_pilot_callsign(pPilotCallsign):
 
     return json.dumps({"pilot": pilot}, cls=AlchemyEncoder), 200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
 
-@APP.route("/api/caar/event/qualifiers/setup", methods=["POST"])
+@APP.route("/api/caar/event/heats/setup", methods=["POST"])
 @requires_auth
 def api_setup_qualifiers_caar():
     data = request.get_json()
