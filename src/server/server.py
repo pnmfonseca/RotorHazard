@@ -4242,6 +4242,12 @@ if Heat.query.first():
 # Start HTTP server
 if __name__ == '__main__':
     port_val = Config['GENERAL']['HTTP_PORT']
+
+    # basic CAAR branding
+    setOption("timerLogo", "image/CAARLogo.jpg")
+    setOption("timerName", "CAAR Timing")
+    # basic CAAR branding
+
     print "Running http server at port " + str(port_val)
     try:
         SOCKET_IO.run(APP, host='0.0.0.0', port=port_val, debug=True, use_reloader=False)
