@@ -847,7 +847,7 @@ def api_pilot_callsign(pPilotCallsign):
 
 @APP.route("/api/caar/event/heats/setup", methods=["POST"])
 @requires_auth
-def api_setup_qualifiers_caar():
+def api_setup_heats_caar():
     data = request.get_json()
     server_log("Received POST with: {0}".format(data))
 
