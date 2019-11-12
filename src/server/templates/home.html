@@ -25,7 +25,8 @@
 		{% if getOption("timerLogo") %}
 			<img src="./static/{{ getOption('timerLogo') }}" alt="{{ getOption('timerName') }}" />
 		{% else %}
-			<img src="./static/image/RotorHazard Logo.svg" alt="{{ getOption('timerName') }}" />
+		<!-- <img src="./static/image/RotorHazard Logo.svg" alt="{{ getOption('timerName') }}" /> -->
+			<img src="./static/{{ getOption('timerLogo') }}" alt="{{ getOption('timerName') }}" />
 		{% endif %}
 	</h1>
 </div>

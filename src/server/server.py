@@ -3973,6 +3973,7 @@ def db_reset_race_formats():
     server_log("Database reset race formats")
 
 def db_reset_options_defaults():
+    print "db_reset_options_defaults()"
     DB.session.query(GlobalSettings).delete()
     setOption("server_api", SERVER_API)
     # group identifiers
