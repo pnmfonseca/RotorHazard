@@ -1,0 +1,16 @@
+
+
+/* h3:contains('G1'){background: '#F4CCCC'}
+h3:contains('G2'){background: '#D9EAD3'}
+h3:contains('G3'){background: '#C9DAF8'}
+h3:contains('G4'){background: '#FCD5B4'}
+h3:contains('G5'){background: '#F4CCCC'}
+h3:contains('G6'){background: '#D9EAD3'} */
+
+.caar-container {
+    text-align: center;
+}
+  
+.caar-button {
+display: inline-block;
+}

@@ -4,6 +4,17 @@
 
 	$(document).ready(function () {
 
+		$( "#btnExpand" ).click( function( event ) {
+			$(".panel-content").each(function(){
+				$(this).show()
+			})
+		});
+		$( "#btnCollapse" ).click( function( event ) {
+			$(".panel-content").each(function(){
+				$(this).hide()
+			})
+		});
+	
 	});
 
 </script>
@@ -11,6 +22,11 @@
 
 {% block content %}
 
+<br>
+<div class="caar-container">
+	<button id="btnExpand" class="caar-button ui-button ui-widget ui-corner-all">Expand All</button>
+	<button id="btnCollapse" class="caar-button ui-button ui-widget ui-corner-all">Collapse All</button>
+</div>
 <br>
 
 <main class="page-leaderboards">
