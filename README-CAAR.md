@@ -1,12 +1,16 @@
 ![CAAR Logo](/src/server/static/image/CAARLogo.jpg)
 
 # RotorHazard -> CAAR Adoption
-This project evolves over the impressive work from the upstream project. As part of our flight club's adoption (CAAR, Portugal), we are integrating Rotorhazard into the the existing Scoring rules and control system (and not the other way around).
+This project evolves over the impressive work from the upstream RotorHazard project. As part of our flight club's adoption (CAAR, Portugal), we are integrating Rotorhazard into the the existing Scoring rules and control system (and not the other way around).
 
 Rotorhazard is the Timing System whereas the score is orchestrated from within MS Excel. Rotorhazard is automated through Excel and results as well as helper data is read from Rotorhazard.
 
 # Rationale and background
 The Drone Racing National's Championship in Portugal - aka F9U - is bound to Europe's FAI rules. While addressing FAI's operational rules at events, the Score in Portugal is the result of a community-driven process. Built on the audience input,  the score derives from accumulated points throughout several race events and thus the Championship.
+
+Currently, most clubs  use Chorus RF Laptimer for Timing. PT Scoring rules are implemented in MS Excel.
+Going forward, the goal is to automate RotorHazard setup (Pilots, Frequencies, Classes, Heats) from Excel itself.
+Also, we consume RH's API to feed the Excel-based Scoring.
 
 The process is outlined as follows:
  * Qualifiers
@@ -44,14 +48,17 @@ Entities
         * Looks up pilots by their name
     * api/caar/pilot/callsign/<pPilotCallsign>
         * Looks up pilots by their callsign
-    * /api/caar/event/qualifiers/setup
+    * /api/caar/event/heats/setup 
         * Creates Classes and Heats
+    * /api/caar/event/results/<few variations>
+	* returns detailed info about a heat suchs timings and their validities
 * Added, Menu entry to display a Leaderboard in a custom format
 * Added, Settings/Database
     * Added an option to fully reset the RH database (Races, Heats, Classes, and Pilots -- Full Reset)
 * Added, Prevent running Heats when their Class is *Unassigned*
 * Added, New Heats page, that groups heats per Round and optionally colorizes the completed ones.
-
+* Added, temporarilty at least, jQuery support
+* Added, a custom Heats page that displays Heats grouped by Classes, for readibility.
 
 ## Contributors
 * Paulo Jesus
