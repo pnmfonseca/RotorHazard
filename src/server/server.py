@@ -882,6 +882,51 @@ def api_setup_heats_caar():
 
     return json.dumps(data),201, {'Content-Type': 'application/json'}
 
+@APP.route("/api/caar/event/results/<int:heat_id>/<int:pilot_id>/<int:round_id>")
+@APP.route("/api/caar/event/results/<int:heat_id>/<int:pilot_id>/")
+@APP.route("/api/caar/event/results/<int:heat_id>/")
+def api_time_results(heat_id, pilot_id=0, round_id=1):
+
+    REQUIRED_LAPS=3
+
+    race_results=json.loads(api_race(heat_id, round_id)[0])
+    #print json.dumps(race_results, sort_keys=True, indent=4)
+
+    pilot_times=[]
+
+    for node in race_results['race']['nodes']:
+        if node['pilot_id']==pilot_id or pilot_id==0:
+            valid_lap_times=[]
+            best_lap_time=99999999999
+            best_lap_number=0
+            first_pass_time=0
+            total_time=0
+            lap_number=0
+            for laps in node['laps']:
+                if laps['deleted']: #skip delete laps
+                    continue
+                lap_time=round(laps['lap_time']/1000,3)
+                #print 'lap_time', lap_number, lap_time
+                if lap_number==0: # First pass, save time and skip to next pass (first lap completed)
+                    first_pass_time=lap_time
+                    lap_number=1
+                    continue
+                if lap_number==1: # First lap completed, sum lap time with first_pass_time
+                    lap_time=lap_time+first_pass_time
+                #print 'fixed lap_time', lap_number, lap_time
+                valid_lap_times.append(lap_time)
+                total_time=total_time+lap_time
+                if lap_time < best_lap_time:
+                    best_lap_time=lap_time
+                    best_lap_number=lap_number
+                lap_number=lap_number+1
+    
+            data={'start_time': race_results['race']['start_time_formatted'], 'pilot_id': node['pilot_id'], 'heat_id': heat_id, 'round_id': round_id, 'laps': len(valid_lap_times), 'best_lap_time': best_lap_time, 'best_lap_number': best_lap_number, 'total_time': total_time, 'lap_times': valid_lap_times, 'first_pass_time': first_pass_time, 'completed': len(valid_lap_times)==REQUIRED_LAPS}
+            pilot_times.append(data)
+
+    return json.dumps(pilot_times), 200, {'Content-Type': 'application/json'}
+
+
 ### CAAR routes ###
 
 @APP.route('/api/pilot/all')
