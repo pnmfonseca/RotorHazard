@@ -926,7 +926,24 @@ def api_time_results(heat_id, pilot_id=0, round_id=1):
 
     return json.dumps(pilot_times), 200, {'Content-Type': 'application/json'}
 
+@APP.route('/api/caar/event/frequencies/setup', methods=[ 'POST'])
+@requires_auth
+def setfrequenciesPOST():
+    #{ "frequencies": [5800, 5800, 5800, 5800] }
+    '''Route to the frequency setup.'''
+    data = request.get_json()
+    server_log("Received POST with: {0}".format(data))
 
+    freqs = [ FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE]
+     
+    for idx in range(len(data["frequencies"])):
+        freqs[idx] = data["frequencies"][idx]
+        
+    set_all_frequencies(freqs)
+    emit_frequency_data()
+    hardware_set_all_frequencies(freqs)
+    return Response(response='OK\n', status=200)
+    
 ### CAAR routes ###
 
 @APP.route('/api/pilot/all')
