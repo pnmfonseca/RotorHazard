@@ -299,9 +299,9 @@
 				// Do not allow this heat if class is Unclassified
 				if (heat.class_id==0){
 					if (heat.note) {
-						name=heat.note+'\n';
+						name=heat.note+' ';
 					} else {
-						name=__('Heat') + ' ' + heat.heat_id+'\n';
+						name=__('Heat') + ' ' + heat.heat_id+' ';
 					}
 					skipped_heats+=name;
 					continue;
@@ -319,7 +319,20 @@
 
 			// Popup alert if Heats were skipped
 			if (skipped_heats!=""){
-				alert('The following Heats were ignored due to unassigned class:\n'+skipped_heats);
+				skipo = ""
+				setTimeout(function(){
+					skipo += "<ul>"
+					
+					let fullskippies = skipped_heats.split(" ")
+					let lastblank = fullskippies.pop()
+					let skippies = fullskippies
+					for(i=0;i<skippies.length;i++){
+						skipo += "<li>"+ skippies[i] +"</li>"
+					}
+					skipo += "</ul>"
+					$("#dialog-message").html('The following Heats were ignored due to unassigned class:\n'+skipo).dialog("open")
+					//alert('The following Heats were ignored due to unassigned class:\n'+skipped_heats);
+				},0)
 			}
 
 			socket.emit('load_data', {'load_types': [
@@ -488,6 +501,18 @@
 		socket.on('stage_ready', function (msg) {
 			race_kickoff(msg);
 		});
+
+		// CAAR
+		$( "#dialog-message" ).dialog({
+			modal: true,
+			autoOpen: false,
+			buttons: {
+				Ok: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		// CAAR
 
 		$('button#start_race').click(function (event) {
 			if(!$(this).prop('disabled')) {
@@ -1038,6 +1063,9 @@
 </script>
 {% endblock %} {% block content %}
 <main class="page-race">
+
+<div id="dialog-message" title="">
+</div>
 
 <div class="panel">
 	<div class="panel-content full-width">
