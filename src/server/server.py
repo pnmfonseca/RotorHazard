@@ -882,12 +882,19 @@ def api_setup_qualifiers_caar():
 
     return json.dumps(data),201, {'Content-Type': 'application/json'}
 
-@APP.route("/api/caar/event/results/<int:heat_id>/<int:pilot_id>/<int:round_id>")
-@APP.route("/api/caar/event/results/<int:heat_id>/<int:pilot_id>/")
-@APP.route("/api/caar/event/results/<int:heat_id>/")
-def api_time_results(heat_id, pilot_id=0, round_id=1):
+@APP.route("/api/caar/event/results/<int:heat_id>/<int:pilot_id>/<int:round_id>", methods=['GET','POST'])
+@APP.route("/api/caar/event/results/<int:heat_id>/<int:pilot_id>/", methods=['GET','POST'])
+@APP.route("/api/caar/event/results/<int:heat_id>/", methods=['GET','POST'])
+def api_time_results(heat_id, pilot_id=0, round_id=1, first_lap_since_go=1):
 
     REQUIRED_LAPS=3
+
+    # first_lap_since_go allows to control if lap 0 (since GO to first pass on gate) should be included on the time for lap 1
+    # default is to start counting lap 1 since go sinal until completion of that lap
+    if request.method == "POST":
+        first_lap_since_go=request.form.get('first_lap_since_go', default = 1, type = int)
+    else:
+        first_lap_since_go=request.args.get('first_lap_since_go', default = 1, type = int)
 
     race_results=json.loads(api_race(heat_id, round_id)[0])
     #print json.dumps(race_results, sort_keys=True, indent=4)
@@ -911,8 +918,11 @@ def api_time_results(heat_id, pilot_id=0, round_id=1):
                     first_pass_time=lap_time
                     lap_number=1
                     continue
-                if lap_number==1: # First lap completed, sum lap time with first_pass_time
-                    lap_time=lap_time+first_pass_time
+                if lap_number==1: # First lap completed
+                    if first_lap_since_go==1: # sum lap time with first_pass_time
+                        lap_time=lap_time+first_pass_time
+                    else: # first_pass_time should not count for first lap time, but needs to be added as total time
+                        total_time=first_pass_time
                 #print 'fixed lap_time', lap_number, lap_time
                 valid_lap_times.append(lap_time)
                 total_time=total_time+lap_time
