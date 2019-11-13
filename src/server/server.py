@@ -934,7 +934,14 @@ def setfrequenciesPOST():
     data = request.get_json()
     server_log("Received POST with: {0}".format(data))
 
-    freqs = [ FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE]
+    freqs = [ FREQUENCY_ID_NONE, 
+              FREQUENCY_ID_NONE, 
+              FREQUENCY_ID_NONE, 
+              FREQUENCY_ID_NONE, 
+              FREQUENCY_ID_NONE, 
+              FREQUENCY_ID_NONE, 
+              FREQUENCY_ID_NONE, 
+              FREQUENCY_ID_NONE]
      
     for idx in range(len(data["frequencies"])):
         freqs[idx] = data["frequencies"][idx]
@@ -943,6 +950,20 @@ def setfrequenciesPOST():
     emit_frequency_data()
     hardware_set_all_frequencies(freqs)
     return Response(response='OK\n', status=200)
+    
+    
+ @APP.route('/api/caar/event/database/reset')
+def api_database_reset():
+    data = request.get_json()
+    
+    reset_type=fullReset
+    
+    
+    on_reset_database(data)
+    return json.dumps(data),201, {'Content-Type': 'application/json'}
+    
+  
+    
     
 ### CAAR routes ###
 
