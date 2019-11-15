@@ -883,8 +883,8 @@ def api_setup_qualifiers_caar():
     return json.dumps(data),201, {'Content-Type': 'application/json'}
 
 @APP.route("/api/caar/event/results/<int:heat_id>/<int:pilot_id>/<int:round_id>", methods=['GET','POST'])
-@APP.route("/api/caar/event/results/<int:heat_id>/<int:pilot_id>/", methods=['GET','POST'])
-@APP.route("/api/caar/event/results/<int:heat_id>/", methods=['GET','POST'])
+@APP.route("/api/caar/event/results/<int:heat_id>/<int:pilot_id>", methods=['GET','POST'])
+@APP.route("/api/caar/event/results/<int:heat_id>", methods=['GET','POST'])
 def api_time_results(heat_id, pilot_id=0, round_id=1, first_lap_since_go=1):
 
     REQUIRED_LAPS=3
