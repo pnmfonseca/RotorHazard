@@ -944,7 +944,14 @@ def setfrequenciesPOST():
     data = request.get_json()
     server_log("Received POST with: {0}".format(data))
 
-    freqs = [ FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE, FREQUENCY_ID_NONE]
+    freqs = [ FREQUENCY_ID_NONE,
+              FREQUENCY_ID_NONE, 
+              FREQUENCY_ID_NONE, 
+              FREQUENCY_ID_NONE, 
+              FREQUENCY_ID_NONE, 
+              FREQUENCY_ID_NONE, 
+              FREQUENCY_ID_NONE, 
+              FREQUENCY_ID_NONE]
      
     for idx in range(len(data["frequencies"])):
         freqs[idx] = data["frequencies"][idx]
