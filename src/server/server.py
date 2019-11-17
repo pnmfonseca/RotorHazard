@@ -961,6 +961,26 @@ def setfrequenciesPOST():
     hardware_set_all_frequencies(freqs)
     return Response(response='OK\n', status=200)
     
+    
+# races      Races
+# heats      Races and Heats
+# classes    Races, Heats, and Classes
+# pilots     Races, Heats, and Pilots
+# all        Races, Heats, Classes, and Pilots
+# fullReset  Races, Heats, Classes, and Pilots -- Full Reset
+
+@APP.route("/api/caar/database/reset/<string:reset_type>", methods=['GET'])
+def api_database_reset(reset_type):
+    data = {}
+    data["reset_type"] = reset_type
+    server_log("Received POST with: {0}".format(data))
+    on_reset_database(data)
+    return Response(response='OK\n', status=200)
+
+
+
+  
+    
 ### CAAR routes ###
 
 @APP.route('/api/pilot/all')
