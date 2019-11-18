@@ -942,7 +942,7 @@ def api_time_results(heat_id, pilot_id=0, round_id=1, first_lap_since_go=1):
 
     except Exception as ex:
         server_log("Error on api_time_results() [{}]".format(str(ex)))
-        return Response("Error on api_time_results() [{}]".format(str(ex)),422)
+        return {"message":"Error on api_time_results() [{}]".format(str(ex))}, 422, {'Content-Type': 'application/json'}
 
 @APP.route('/api/caar/event/frequencies/setup', methods=[ 'POST'])
 @requires_auth
