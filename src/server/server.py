@@ -887,54 +887,62 @@ def api_setup_heats_caar():
 @APP.route("/api/caar/event/results/<int:heat_id>", methods=['GET','POST'])
 def api_time_results(heat_id, pilot_id=0, round_id=1, first_lap_since_go=1):
 
-    REQUIRED_LAPS=3
-
-    # first_lap_since_go allows to control if lap 0 (since GO to first pass on gate) should be included on the time for lap 1
-    # default is to start counting lap 1 since go sinal until completion of that lap
-    if request.method == "POST":
-        first_lap_since_go=request.form.get('first_lap_since_go', default = 1, type = int)
-    else:
-        first_lap_since_go=request.args.get('first_lap_since_go', default = 1, type = int)
-
-    race_results=json.loads(api_race(heat_id, round_id)[0])
-    #print json.dumps(race_results, sort_keys=True, indent=4)
-
-    pilot_times=[]
-
-    for node in race_results['race']['nodes']:
-        if node['pilot_id']==pilot_id or pilot_id==0:
-            valid_lap_times=[]
-            best_lap_time=99999999999
-            best_lap_number=0
-            first_pass_time=0
-            total_time=0
-            lap_number=0
-            for laps in node['laps']:
-                if laps['deleted']: #skip delete laps
-                    continue
-                lap_time=round(laps['lap_time']/1000,3)
-                #print 'lap_time', lap_number, lap_time
-                if lap_number==0: # First pass, save time and skip to next pass (first lap completed)
-                    first_pass_time=lap_time
-                    lap_number=1
-                    continue
-                if lap_number==1: # First lap completed
-                    if first_lap_since_go==1: # sum lap time with first_pass_time
-                        lap_time=lap_time+first_pass_time
-                    else: # first_pass_time should not count for first lap time, but needs to be added as total time
-                        total_time=first_pass_time
-                #print 'fixed lap_time', lap_number, lap_time
-                valid_lap_times.append(lap_time)
-                total_time=total_time+lap_time
-                if lap_time < best_lap_time:
-                    best_lap_time=lap_time
-                    best_lap_number=lap_number
-                lap_number=lap_number+1
+    try:
     
-            data={'start_time': race_results['race']['start_time_formatted'], 'pilot_id': node['pilot_id'], 'heat_id': heat_id, 'round_id': round_id, 'laps': len(valid_lap_times), 'best_lap_time': best_lap_time, 'best_lap_number': best_lap_number, 'total_time': total_time, 'lap_times': valid_lap_times, 'first_pass_time': first_pass_time, 'completed': len(valid_lap_times)==REQUIRED_LAPS}
-            pilot_times.append(data)
+        REQUIRED_LAPS=3
 
-    return json.dumps(pilot_times), 200, {'Content-Type': 'application/json'}
+        # first_lap_since_go allows to control if lap 0 (since GO to first pass on gate) should be included on the time for lap 1
+        # default is to start counting lap 1 since go sinal until completion of that lap
+        if request.method == "POST":
+            first_lap_since_go=request.form.get('first_lap_since_go', default = 1, type = int)
+        else:
+            first_lap_since_go=request.args.get('first_lap_since_go', default = 1, type = int)
+
+        race_results=json.loads(api_race(heat_id, round_id)[0])
+        #print json.dumps(race_results, sort_keys=True, indent=4)
+
+        pilot_times=[]
+
+        for node in race_results['race']['nodes']:
+            if node['pilot_id']==pilot_id or pilot_id==0:
+                valid_lap_times=[]
+                best_lap_time=99999999999
+                best_lap_number=0
+                first_pass_time=0
+                total_time=0
+                lap_number=0
+                for laps in node['laps']:
+                    if laps['deleted']: #skip delete laps
+                        continue
+                    lap_time=round(laps['lap_time']/1000,3)
+                    #print 'lap_time', lap_number, lap_time
+                    if lap_number==0: # First pass, save time and skip to next pass (first lap completed)
+                        first_pass_time=lap_time
+                        lap_number=1
+                        continue
+                    if lap_number==1: # First lap completed
+                        if first_lap_since_go==1: # sum lap time with first_pass_time
+                            lap_time=lap_time+first_pass_time
+                        else: # first_pass_time should not count for first lap time, but needs to be added as total time
+                            total_time=first_pass_time
+                    #print 'fixed lap_time', lap_number, lap_time
+                    valid_lap_times.append(lap_time)
+                    total_time=total_time+lap_time
+                    if lap_time < best_lap_time:
+                        best_lap_time=lap_time
+                        best_lap_number=lap_number
+                    lap_number=lap_number+1
+        
+                data={'start_time': race_results['race']['start_time_formatted'], 'pilot_id': node['pilot_id'], 'heat_id': heat_id, 'round_id': round_id, 'laps': len(valid_lap_times), 'best_lap_time': best_lap_time, 'best_lap_number': best_lap_number, 'total_time': total_time, 'lap_times': valid_lap_times, 'first_pass_time': first_pass_time, 'completed': len(valid_lap_times)==REQUIRED_LAPS}
+                pilot_times.append(data)
+
+        return json.dumps(pilot_times), 200, {'Content-Type': 'application/json'}
+
+
+
+    except Exception as ex:
+        server_log("Error on api_time_results() [{}]".format(str(ex)))
+        return Response("Error on api_time_results() [{}]".format(str(ex)),422)
 
 @APP.route('/api/caar/event/frequencies/setup', methods=[ 'POST'])
 @requires_auth
