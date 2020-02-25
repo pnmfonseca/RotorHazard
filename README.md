@@ -2,6 +2,8 @@
 
 ![RotorHazard Logo](/src/server/static/image/RotorHazard%20Logo.svg)
 
+[![CI](https://api.travis-ci.com/RotorHazard/RotorHazard.svg)](https://travis-ci.com/RotorHazard/RotorHazard)
+
 # RotorHazard
 FPV Race Timing and Event Management
 
@@ -25,9 +27,13 @@ RotorHazard builds on the [Delta5 Race Timer](https://github.com/scottgchin/delt
 * JSON API to retrieve timing data from other systems
 
 ## Hardware and Software Setup
-To build and configure the system, follow the instructions here:  
-[doc/Hardware Setup.md](doc/Hardware%20Setup.md)  
+To build and configure the system, follow the instructions here:<br />
+[doc/Hardware Setup.md](doc/Hardware%20Setup.md)<br />
 [doc/Software Setup.md](doc/Software%20Setup.md)
+
+An easy-to-build single node version of RotorHazard may also be constructed -- see [doc/USB Nodes.md](doc/USB%20Nodes.md) for more info.
+
+**Note:** The 'master' branch in the GitHub repository will usually contain the latest development code, which may not be stable. To install the latest stable release, please follow the instructions in the [doc/Software Setup.md](doc/Software%20Setup.md) document (for version upgrading see the '[Updating an existing installation](doc/Software%20Setup.md#update)' section at the end).
 
 ## User Guide
 For initial setup and running races, follow these instructions: [doc/User Guide.md](doc/User%20Guide.md)
@@ -51,6 +57,7 @@ RotorHazard uses the same hardware, but different code for the nodes. Re-flash y
 * German: Klaus Michael Schneider
 * Spanish: Ramon Hernandez Roldan
 * French: Yannick M.
+* Polish: Mariusz Misiurek
 
 ## Feedback
 

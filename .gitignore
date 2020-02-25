@@ -1,6 +1,7 @@
 *.db
 *.pyc
 config.json
+db_bkp
 pfonseca
 .vscode
 .project
