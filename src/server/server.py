@@ -1,5 +1,5 @@
 '''RotorHazard server script'''
-RELEASE_VERSION = "2.1.0" # Public release version code
+RELEASE_VERSION = "2.1.1" # Public release version code
 SERVER_API = 26 # Server API version
 NODE_API_SUPPORTED = 18 # Minimum supported node version
 NODE_API_BEST = 22 # Most recent node API
@@ -2715,7 +2715,7 @@ def emit_node_tuning(**params):
     emit_payload = {
         'profile_ids': [profile.id for profile in Profiles.query.all()],
         'profile_names': [profile.name for profile in Profiles.query.all()],
-        'current_profile': current_profile,
+        'current_profile': int(getOption('currentProfile')),
         'profile_name': tune_val.name,
         'profile_description': tune_val.description
     }

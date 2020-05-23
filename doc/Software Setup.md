@@ -21,7 +21,7 @@ sudo apt-get update && sudo apt-get upgrade
 
 Install Python and the Python drivers for the GPIO.
 ```
-sudo apt-get install python-dev python-rpi.gpio libffi-dev python-smbus build-essential python-pip git scons swig
+sudo apt install python-dev libffi-dev python-smbus build-essential python-pip git scons swig python-rpi.gpio
 ```
 
 Install the function interface into Python
@@ -105,6 +105,21 @@ Install the Python library:
 cd python
 sudo python setup.py install
 ```
+
+Note: The **LED_COUNT** value will need to be set in the `src/server/config.json` file. See the `src/server/config-dist.json` file for the default configuration of the 'LED' settings.  The following items may be set:
+```
+LED_COUNT:  Number of LED pixels in strip (or panel)
+LED_PIN:  GPIO pin connected to the pixels (default 10 uses SPI '/dev/spidev0.0')
+LED_FREQ_HZ:  LED signal frequency in hertz (usually 800000)
+LED_DMA:  DMA channel to use for generating signal (default 10)
+LED_INVERT:  True to invert the signal (when using NPN transistor level shift)
+LED_CHANNEL:  Set to '1' for GPIOs 13, 19, 41, 45 or 53
+LED_STRIP:  Strip type and color ordering (default is 'GRB')
+LED_ROWS:  Number of rows in LED-panel array (1 for strip)
+PANEL_ROTATE:  Optional panel-rotation value (default 0)
+INVERTED_PANEL_ROWS:  Optional panel row-inversion (default false)
+```
+If specified, the **LED_STRIP** value must be one of: 'RGB', 'RBG', 'GRB', 'GBR', 'BRG', 'BGR', 'RGBW', 'RBGW', 'GRBW',  'GBRW', 'BRGW', 'BGRW'
 
 ### INA219 Voltage/Current Support
 The ina219 interface is provided by the following project:
@@ -192,6 +207,11 @@ sudo systemctl daemon-reload
 sudo systemctl enable rotorhazard.service
 sudo reboot
 ```
+#### Stop the server service
+If a server was started as a service, during the boot, you may use that command to stop it:
+```
+sudo systemctl stop rotorhazard
+```
 
 ### Shutting down the System
 A system shutdown should always be performed before unplugging the power, either by clicking on the 'Shutdown' button on the 'Settings' page, or by entering the following in a terminal:
@@ -202,7 +222,10 @@ sudo shutdown now
 <a id="update"></a>
 ### Updating an existing installation
 
-Before updating, any currently-running RotorHazard server should be stopped. If installed as a service, it may be stopped with a command like: `sudo systemctl stop rotorhazard`
+Before updating, any currently-running RotorHazard server should be stopped. If installed as a service, it may be stopped with a command like:
+```
+sudo systemctl stop rotorhazard
+```
 
 To update an existing RotorHazard installation: Go to the [Latest Release page](https://github.com/RotorHazard/RotorHazard/releases/latest) for the project and note the version code. In the commands below, replace the two occurrences of "1.2.3" with the current version code, and enter the commands:
 ```
@@ -241,10 +264,10 @@ To install the RotorHazard server on these systems:
 
 1. Open up a command prompt and navigate to the ```src/server``` directory in the RotorHazard files (using the 'cd' command).
 
-1. Install the RotorHazard server dependencies using the 'requirements.txt' file, using one of the commands below.
-  * On a Windows system the command to use will likely be:<br/>```python -m pip install -r requirements.txt```
+1. Install the RotorHazard server dependencies using the 'requirements.txt' file, using one of the commands below. (Note that this command may require administrator access to the computer, and the command may take a few minutes to finish).
+  * On a Windows system the command to use will likely be:<br/>```python -m pip install -r requirements.txt```<br/><br/>
   * On a Linux system the command to use will likely be:<br/>```sudo pip install -r requirements.txt```<br/>
-(Note that this command may require administrator access to the computer, and the command may take a few minutes to finish).
+
 
 To run the RotorHazard server on these systems:
 
